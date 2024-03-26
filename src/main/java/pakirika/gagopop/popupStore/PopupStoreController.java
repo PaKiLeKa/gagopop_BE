@@ -21,7 +21,7 @@ public class PopupStoreController {
     private final PopupStoreRepository popupStoreRepository;
     private final PopupStoreService popupStoreService;
     
-    @GetMapping("/api/find")
+    @GetMapping("/api/popup/find")
     public List<PopupStore>  findPopupByNameAndDate(@RequestParam("name") String name, @RequestParam("date") String dateString){
 
 
@@ -32,6 +32,16 @@ public class PopupStoreController {
 
         return result;
     }
-    
+
+    @GetMapping("api/popup/route/find")
+    public List<PopupStore>  findPopupRouteByIdList(@RequestParam("pid") List<Long> pid,
+                                                    @RequestParam("longitude") double longitude,
+                                                    @RequestParam("latitude") double latitude){
+
+        List<PopupStore> popupStores=popupStoreService.sortPopupStore(latitude, longitude, pid );
+
+        return popupStores;
+    }
+
     
 }
