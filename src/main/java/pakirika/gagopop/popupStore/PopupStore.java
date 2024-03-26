@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -20,6 +23,9 @@ public class PopupStore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private LocalDateTime StartDate;
+    private LocalDateTime EndDate;
+    private boolean isOpened;
     private double latitude;
     private double longitude;
 
