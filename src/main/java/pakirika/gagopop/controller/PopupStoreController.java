@@ -33,7 +33,7 @@ public class PopupStoreController {
         return result;
     }
 
-    @GetMapping("popup/route/find")
+    @GetMapping("popup/find-route")
     public List<PopupStore>  findPopupRouteByIdList(@RequestParam("pid") List<Long> pid,
                                                     @RequestParam("longitude") double longitude,
                                                     @RequestParam("latitude") double latitude){
@@ -43,7 +43,7 @@ public class PopupStoreController {
         return popupStores;
     }
 
-    @GetMapping("popup/findAll")
+    @GetMapping("popup/find-all")
     public List<PopupStore> findPopupAll(){
         List<PopupStore> allPopupStores = popupStoreRepository.findAll();
         // TODO
