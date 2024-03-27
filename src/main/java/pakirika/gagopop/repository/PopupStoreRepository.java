@@ -1,13 +1,12 @@
-package pakirika.gagopop.popupStore;
+package pakirika.gagopop.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import pakirika.gagopop.entity.PopupStore;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface PopupStoreRepository extends JpaRepository<PopupStore,Long> {
 
@@ -17,5 +16,7 @@ public interface PopupStoreRepository extends JpaRepository<PopupStore,Long> {
             "start_date<= :date AND end_date >= :date and is_opened is not null",
             nativeQuery=true)
     List<PopupStore> findOpenPopupStoresByNameDate(@Param("name") String name, @Param("date") LocalDate date);
+
+    List<PopupStore> findAll();
 
 }

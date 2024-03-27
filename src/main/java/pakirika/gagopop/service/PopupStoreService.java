@@ -1,7 +1,9 @@
-package pakirika.gagopop.popupStore;
+package pakirika.gagopop.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pakirika.gagopop.entity.PopupStore;
+import pakirika.gagopop.repository.PopupStoreRepository;
 
 import java.util.ArrayList;
 import java.util.List;

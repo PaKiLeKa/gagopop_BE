@@ -1,4 +1,4 @@
-package pakirika.gagopop.popupStore;
+package pakirika.gagopop.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,9 +28,6 @@ public class PopupStore {
     private boolean isOpened;
     private double latitude;
     private double longitude;
-
-//    private String StartDate;
-//    private String EndDate;
 
     public PopupStore(Long id, String name) {
         this.id=id;
