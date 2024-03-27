@@ -44,4 +44,8 @@ public class JWTUtil {
                 .signWith(secretKey)
                 .compact();
     }
+
+    public String getUsernameFromToken(String authToken) {
+        return null;
+    }
 }

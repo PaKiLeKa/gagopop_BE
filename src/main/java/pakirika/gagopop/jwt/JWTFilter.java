@@ -21,19 +21,33 @@ public class JWTFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
 
 
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        //cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
+        String requestUri = request.getRequestURI();
+
+        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authorization = null;
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) { // null 체크 추가
+        //if (cookies != null) { // null 체크 추가
             for (Cookie cookie : cookies) {
                 if (cookie != null && cookie.getName().equals( "Authorization" )) {
                     authorization=cookie.getValue();
                 }
             }
-        }
+        //}
 
         //Authorization 헤더 검증
         if (authorization == null) {
@@ -53,7 +67,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
             System.out.println("token expired");
             filterChain.doFilter(request, response);
-
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
