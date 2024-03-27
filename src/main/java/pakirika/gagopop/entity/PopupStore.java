@@ -28,6 +28,8 @@ public class PopupStore {
     private boolean isOpened;
     private double latitude;
     private double longitude;
+    private String info;
+    private String imageUrl;
 
     public PopupStore(Long id, String name) {
         this.id=id;
