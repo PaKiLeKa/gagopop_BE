@@ -80,7 +80,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests( (auth) -> auth.
-                        requestMatchers( "/", "/oauth2/**", "/login/**" ).permitAll()
+                        requestMatchers( "/", "/oauth2/**", "/login/**", "/popup/**" ).permitAll()
                         .anyRequest().authenticated() ); //다른 곳들은 인가된 사람만
 
         //세션 설정
