@@ -20,4 +20,5 @@ public class WishlistPopupStore {
     @ManyToOne
     @JoinColumn(name = "popup_store_id", referencedColumnName = "id")
     private PopupStore popupStore;
+
 }
