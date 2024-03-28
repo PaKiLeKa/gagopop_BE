@@ -51,7 +51,9 @@ public class JWTFilter extends OncePerRequestFilter {
         if (authorization == null) {
 
             System.out.println("token null");
-            filterChain.doFilter(request, response);
+            response.setStatus( HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token null or invalid");
+            //filterChain.doFilter(request, response);
 
             //조건이 해당되면 메소드 종료한다.
             return;
@@ -64,8 +66,10 @@ public class JWTFilter extends OncePerRequestFilter {
         if (jwtUtil.isExpired(token)) {
 
             System.out.println("token expired");
-            filterChain.doFilter(request, response);
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
+            //filterChain.doFilter(request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
+            response.getWriter().write("Token expired");
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
