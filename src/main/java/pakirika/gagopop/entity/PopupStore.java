@@ -28,6 +28,7 @@ public class PopupStore {
     private boolean isOpened;
     private double latitude;
     private double longitude;
+    private String address;
     private String info;
     private String imageUrl;
 
