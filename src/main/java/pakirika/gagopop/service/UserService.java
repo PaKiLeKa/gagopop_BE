@@ -48,7 +48,7 @@ public class UserService {
         return userProfile;
 
     }
-
+    //유저 닉네임수정
     @Transactional
     public void updateUserNickName(UserEntity userEntity, String newNickname) {
 
@@ -57,7 +57,10 @@ public class UserService {
 
     }
 
-    //유저 닉네임수정
+    //Todo
+    //유저 stamp 전체 가져오기
+
+
 
 
 

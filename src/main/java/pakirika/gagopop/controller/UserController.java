@@ -2,11 +2,9 @@ package pakirika.gagopop.controller;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pakirika.gagopop.dto.UserDTO;
 import pakirika.gagopop.dto.UserProfileDTO;
 import pakirika.gagopop.entity.UserEntity;
 import pakirika.gagopop.jwt.JWTUtil;
