@@ -79,18 +79,17 @@ public class SecurityConfig {
 
         //JWTFilter 추가
         http
-
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
-
-
 
         //OAuth2
         http
                 .oauth2Login( (oauth2)-> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService( customOAuth2UserService ))
-                        .successHandler( customSuccessHandler ) )
+                        .successHandler( customSuccessHandler )
+                        .loginPage("/login"))
+                .formLogin((f)->f.disable())
                 .logout((logout)->logout
                         .logoutSuccessUrl( "/" )
                         .deleteCookies( "Authorization")
