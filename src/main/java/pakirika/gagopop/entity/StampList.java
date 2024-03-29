@@ -14,6 +14,8 @@ public class StampList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name="stamp_id", referencedColumnName="id")
     private Stamp stamp;
 
     @ManyToOne
