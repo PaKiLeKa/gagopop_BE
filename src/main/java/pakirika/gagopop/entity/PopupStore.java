@@ -25,11 +25,13 @@ public class PopupStore {
     private String name;
     private LocalDateTime StartDate;
     private LocalDateTime EndDate;
+    private String OperatingTime;
     private boolean isOpened;
     private double latitude;
     private double longitude;
     private String address;
     private String info;
+    private String snsLink;
     private String imageUrl;
 
     public PopupStore(Long id, String name) {

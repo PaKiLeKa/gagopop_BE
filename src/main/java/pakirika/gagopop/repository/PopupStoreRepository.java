@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface PopupStoreRepository extends JpaRepository<PopupStore,Long> {
 
+
+
     List<PopupStore> findByNameContaining(String name);
 
     @Query(value="SELECT * FROM popup_store  WHERE name like %:name% AND " +
