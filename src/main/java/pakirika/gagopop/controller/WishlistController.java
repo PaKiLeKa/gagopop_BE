@@ -84,4 +84,27 @@ public class WishlistController {
         return ResponseEntity.ok("Added to wishlist successfully");
     }
 
+
+    @PostMapping("/user/wishlist/add-temp")
+    public ResponseEntity<String> addToWishlistTemp(@RequestParam("id") Long userId,
+                                                @RequestParam("pid") Long popupStoreId) {
+
+        Optional<UserEntity> userEntity=userRepository.findById( userId );
+
+        if(userEntity.isEmpty()){
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
+        }
+
+        // popupStoreId를 이용하여 PopupStore 정보 가져오기
+        Optional<PopupStore> popupStore = popupStoreRepository.findById(popupStoreId);
+        if (popupStore.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Popup store not found");
+        }
+
+        // WishlistPopupStore에 데이터 추가
+        wishlistService.addToWishlist(userEntity.get(), popupStore.get());
+
+        return ResponseEntity.ok("Added to wishlist successfully");
+    }
+
 }

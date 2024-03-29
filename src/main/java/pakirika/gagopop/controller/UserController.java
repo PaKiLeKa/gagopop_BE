@@ -87,6 +87,21 @@ public class UserController {
         return ResponseEntity.ok("Updated user nickname");
     }
 
+    @PostMapping("/user/profile/edit-temp")
+    public ResponseEntity editUserNicknameTemp(@RequestParam("id") Long userId, @RequestParam("nickname") String newNickName){
+
+
+        Optional<UserEntity> userEntity=userRepository.findById( userId );
+
+        if(userEntity.isEmpty()){
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
+        }
+
+        userService.updateUserNickName(userEntity.get(), newNickName);
+
+        return ResponseEntity.ok("Updated user nickname");
+    }
+
 
 
 
