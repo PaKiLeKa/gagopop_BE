@@ -11,6 +11,8 @@ import pakirika.gagopop.jwt.JWTUtil;
 import pakirika.gagopop.repository.UserRepository;
 import pakirika.gagopop.service.UserService;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @Transactional
@@ -24,6 +26,7 @@ public class UserController {
 
     @GetMapping("/user/profile")
     public ResponseEntity<?> userProfile(@RequestHeader("Authorization") String authorizationHeader){
+
         String token = authorizationHeader.replace("Bearer ", "");
 
         if(token.isEmpty()){
@@ -43,6 +46,21 @@ public class UserController {
 
         return ResponseEntity.ok( userProfile );
     }
+
+    @GetMapping("/user/profile-temp")
+    public ResponseEntity<?> userProfile(@RequestParam("id") Long userId){
+
+
+        Optional<UserEntity> userEntity=userRepository.findById( userId );
+        if(userEntity.isEmpty()){
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
+        }
+        UserProfileDTO userProfile=userService.getUserProfile( userEntity.get() );
+
+        return ResponseEntity.ok( userProfile );
+    }
+
+
 
 
     //유저 닉네임수정
