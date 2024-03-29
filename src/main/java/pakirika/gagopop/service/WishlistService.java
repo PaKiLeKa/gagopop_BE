@@ -8,7 +8,6 @@ import pakirika.gagopop.dto.WishTogoDTO;
 import pakirika.gagopop.entity.*;
 import pakirika.gagopop.repository.TogoListPopupStoreRepository;
 import pakirika.gagopop.repository.UserRepository;
-import pakirika.gagopop.repository.WishlistPopupStoreRepository;
 import pakirika.gagopop.repository.WishlistRepository;
 
 import java.util.List;
