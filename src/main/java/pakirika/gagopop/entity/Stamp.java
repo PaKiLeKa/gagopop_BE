@@ -17,8 +17,5 @@ public class Stamp {
     @JoinColumn(name = "popup_store_id", referencedColumnName = "id")
     private PopupStore popupStore;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id" )
-    private UserEntity userEntity;
 
 }
