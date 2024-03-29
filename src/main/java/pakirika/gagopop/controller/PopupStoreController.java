@@ -16,9 +16,7 @@ import pakirika.gagopop.service.WishlistService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,11 +42,15 @@ public class PopupStoreController {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate localDate=LocalDate.parse( dateString, formatter );
-            //Date date=Date.from( localDate.atStartOfDay( ZoneId.systemDefault() ).toInstant() );
+
+            //Todo
+            //지역명 검색했을 때도 나오도록 수정해야함
+            //두개의 리스트 얻어서, 중복 제거할 수 있도록?
             List<PopupStore> result= popupStoreRepository.findOpenPopupStoresByNameDate( name, localDate );
             return ResponseEntity.ok(result);
         //}
     }
+
 
     @GetMapping("popup/find-route")
     public List<PopupStore>  findPopupRouteByIdList(@RequestParam("pid") List<Long> pid,
@@ -127,6 +129,48 @@ public class PopupStoreController {
 
 
         return userEntity;
+    }
+
+    @GetMapping("/popup/info")
+    public Map<String, List<PopupStore>> popupInfo(){
+
+        Map<String, List<PopupStore>> popupStoreData = new HashMap<>();
+
+        LocalDate today=this.getCurrentKoreaLocalDate(); //오늘 날짜 구하기 - 한국 기준
+
+        //핫한 팝업 스토어 리스트 ( 얜 기준을 뭐로 해야할까? )
+        List<PopupStore> sixStores=popupStoreRepository.findSixStores(today);
+        popupStoreData.put("hotStores", sixStores);
+
+        //오픈 예정(오픈 날짜가 현재 날짜랑 가까운 순 -asc 쓰면되겠다)
+        List<PopupStore> scheduledToOpen=popupStoreService.getPopupStoreScheduledToOpen( today );
+        popupStoreData.put("scheduledToOpen", scheduledToOpen);
+
+
+        //종료 임박( 종료 날짜가 현재 날짜랑 가까운 순 - 얘도 )
+        List<PopupStore> scheduledToClose=popupStoreService.getPopupStoreScheduledToClose( today );
+        popupStoreData.put("scheduledToClose", scheduledToClose);
+
+
+        //넘길때 전체 각각 리스트객체로 해서 넘기기
+
+        return popupStoreData;
+    }
+
+    public LocalDate getCurrentKoreaLocalDate() {
+        // 현재 시스템의 기본 시간대로 Calendar 객체 생성
+        Calendar calendar = Calendar.getInstance();
+
+        // 기본 시간대를 한국 시간대로 설정
+        TimeZone koreaTimeZone = TimeZone.getTimeZone("Asia/Seoul");
+        calendar.setTimeZone(koreaTimeZone);
+
+        // Calendar 객체에서 년도, 월, 일을 추출하여 LocalDate로 변환
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 1을 더해줌
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        return LocalDate.of(year, month, dayOfMonth);
     }
     
 }

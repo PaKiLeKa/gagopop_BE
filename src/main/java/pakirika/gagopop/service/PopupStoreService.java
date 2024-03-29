@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pakirika.gagopop.entity.PopupStore;
 import pakirika.gagopop.repository.PopupStoreRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,4 +57,23 @@ public class PopupStoreService {
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2));
     }
+
+
+    public List<PopupStore> getPopupStoreScheduledToOpen(LocalDate date){
+
+        List<PopupStore> scheduledToOpenStoreByDate=popupStoreRepository.findStoreScheduledToOpenByDate( date );
+
+
+        return scheduledToOpenStoreByDate;
+    }
+
+    public List<PopupStore> getPopupStoreScheduledToClose(LocalDate date){
+
+        List<PopupStore> scheduledToOpenStoreByDate=popupStoreRepository.findStoreScheduledToCloseByDate( date );
+
+
+        return scheduledToOpenStoreByDate;
+    }
+
+
 }
