@@ -107,6 +107,40 @@ public class PopupStoreController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("popup/find-all-with-wish-temp")
+    public List<PopupWishDTO> findPopupAllWithWishTemp(@RequestParam(name="id")Long userId) {
+        List<PopupStore> allPopupStores = popupStoreRepository.findAll();
+
+        List<Long> popupStoreIdsInWishlist = new ArrayList<>();
+
+
+        Optional<UserEntity> userEntity=userRepository.findById( userId );
+
+            if (userEntity.isPresent()) {
+                List<Wishlist> wishlists = wishlistRepository.findByUserEntity(userEntity.get());
+                if (wishlists != null) {
+                    popupStoreIdsInWishlist = wishlists.stream()
+                            .map(Wishlist::getPopupStore)
+                            .filter( Objects::nonNull)
+                            .map(PopupStore::getId)
+                            .collect(Collectors.toList());
+                }
+            }
+
+
+        final List<Long> finalPopupStoreIdsInWishlist = popupStoreIdsInWishlist;
+
+        return allPopupStores.stream()
+                .map(popupStore -> {
+                    boolean isInWishlist = false;
+                    if (finalPopupStoreIdsInWishlist != null && finalPopupStoreIdsInWishlist.contains(popupStore.getId())) {
+                        isInWishlist = true;
+                    }
+                    return new PopupWishDTO(isInWishlist, popupStore );
+                })
+                .collect(Collectors.toList());
+    }
+
 
 
     // Assuming you have a method to extract userId from the authorizationHeader
