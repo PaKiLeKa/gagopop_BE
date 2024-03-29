@@ -1,6 +1,8 @@
 package pakirika.gagopop.service;
 
 
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pakirika.gagopop.dto.UserDTO;
@@ -10,6 +12,8 @@ import pakirika.gagopop.repository.StampListRepository;
 import pakirika.gagopop.repository.TogoListRepository;
 import pakirika.gagopop.repository.UserRepository;
 import pakirika.gagopop.repository.WishlistRepository;
+
+import java.util.Optional;
 
 
 @Service
@@ -42,6 +46,14 @@ public class UserService {
         userProfile.setStampTotal( stampTotal );
 
         return userProfile;
+
+    }
+
+    @Transactional
+    public void updateUserNickName(UserEntity userEntity, String newNickname) {
+
+        Optional<UserEntity> user=userRepository.findById( userEntity.getId() );
+        user.ifPresent( value ->value.setNickname(newNickname) );
 
     }
 
