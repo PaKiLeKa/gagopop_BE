@@ -16,4 +16,5 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     List<Wishlist> findByPopupStore(PopupStore popupStore);
 
+    Long countByUserEntity(UserEntity userEntity);
 }
