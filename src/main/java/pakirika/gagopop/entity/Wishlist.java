@@ -19,5 +19,10 @@ public class Wishlist {
     @JoinColumn(name="user_id", referencedColumnName="id")
     private UserEntity userEntity;
 
+    @ManyToOne
+    @JoinColumn(name = "popup_store_id", referencedColumnName = "id")
+    private PopupStore popupStore;
+
+
 
 }
