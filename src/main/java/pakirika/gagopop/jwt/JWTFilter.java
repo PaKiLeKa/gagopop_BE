@@ -51,9 +51,9 @@ public class JWTFilter extends OncePerRequestFilter {
         if (authorization == null) {
 
             System.out.println("token null");
-            response.setStatus( HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token null or invalid");
-            //filterChain.doFilter(request, response);
+            //response.setStatus( HttpServletResponse.SC_UNAUTHORIZED);
+            //response.getWriter().write("Token null or invalid");
+            filterChain.doFilter(request, response);
 
             //조건이 해당되면 메소드 종료한다.
             return;

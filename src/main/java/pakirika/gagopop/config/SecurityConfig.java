@@ -101,7 +101,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests( (auth) -> auth
                         //.requestMatchers( "/", "/oauth2/**", "/login/**" ).permitAll()
-                        .requestMatchers( "/wishlist/**" ).authenticated()
+                        .requestMatchers( "/user/**" ).authenticated()
                         .anyRequest().permitAll() );
         //http
                 //.exceptionHandling( (ex) -> ex

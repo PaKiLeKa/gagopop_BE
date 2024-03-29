@@ -34,24 +34,17 @@ public class JWTUtil {
                 return null;
             }
 
-        }catch (SignatureException ex){
-            // 서명 오류!
+        }catch (ExpiredJwtException ex) {
+            // 토큰이 만료된 경우
             ex.printStackTrace(); // 에러 로그 기록
-            isExpired( token );
-            return "Invalid token";
-        }
-        catch (ExpiredJwtException ex){
-            // 만료
+            return "Token expired";
+        } catch (SignatureException ex) {
+            // 서명이 일치하지 않는 경우
             ex.printStackTrace(); // 에러 로그 기록
-            isExpired( token );
-            // 클라이언트에게 오류 응답 반환
-            return "Token Expired";
-        }
-        catch (JwtException ex) {
-            // 그 외의 JWT 예외 발생
+            return "Invalid token: Signature error";
+        } catch (JwtException ex) {
+            // 기타 JWT 예외 발생
             ex.printStackTrace(); // 에러 로그 기록
-            isExpired( token );
-            // 클라이언트에게 오류 응답 반환
             return "Invalid token";
         }
     }
