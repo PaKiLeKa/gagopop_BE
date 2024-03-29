@@ -19,7 +19,5 @@ public class Wishlist {
     @JoinColumn(name="user_id", referencedColumnName="id")
     private UserEntity userEntity;
 
-    @OneToMany(mappedBy = "wishlist", cascade = CascadeType.ALL)
-    private List<WishlistPopupStore> wishlistPopupStores;
 
 }
