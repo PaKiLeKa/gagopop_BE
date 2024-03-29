@@ -88,29 +88,29 @@ public class SecurityConfig {
         //OAuth2
         http
                 .oauth2Login( (oauth2)-> oauth2
-                .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                        .userService( customOAuth2UserService ))
+                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                                .userService( customOAuth2UserService ))
                         .successHandler( customSuccessHandler ) )
                 .logout((logout)->logout
                         .logoutSuccessUrl( "/" )
                         .deleteCookies( "Authorization")
                         .permitAll()); //나중에 추가 셋팅할 것
-                //.oauth2Login( Customizer.withDefaults() );
+        //.oauth2Login( Customizer.withDefaults() );
 
         //경로별 인가 작업
         http
                 .authorizeHttpRequests( (auth) -> auth
                         //.requestMatchers( "/", "/oauth2/**", "/login/**" ).permitAll()
-                        .requestMatchers( "/user/**" ).authenticated()
+                        //.requestMatchers( "/user/**" ).authenticated()
                         .anyRequest().permitAll() );
         //http
-                //.exceptionHandling( (ex) -> ex
-                //        .authenticationEntryPoint( new HttpStatusEntryPoint( HttpStatus.NOT_FOUND ) ) );
-                        //잘못된 경로, 파라미터로 요청시 404 오류 반환하도록
+        //.exceptionHandling( (ex) -> ex
+        //        .authenticationEntryPoint( new HttpStatusEntryPoint( HttpStatus.NOT_FOUND ) ) );
+        //잘못된 경로, 파라미터로 요청시 404 오류 반환하도록
 
 
-                        //.authenticationEntryPoint( (request, response, authException) //인증되지 않은경우 401 반환
-                        //        -> response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"  ) ));
+        //.authenticationEntryPoint( (request, response, authException) //인증되지 않은경우 401 반환
+        //        -> response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"  ) ));
 
 
         //세션 설정
