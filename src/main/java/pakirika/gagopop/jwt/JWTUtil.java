@@ -25,6 +25,10 @@ public class JWTUtil {
 
     //아래 세가지 값 모두 토큰을 이용해서 페이로드에 담겨있는 특정 값을 가지고 나옴
     public String getUsername(String token) {
+
+        if (token == null || token.isEmpty()) {
+            return "token null";
+        }
         try {
             Claims claims=Jwts.parser().verifyWith( secretKey ).build().parseSignedClaims( token ).getPayload();
             if(claims.containsKey( "username" )){
