@@ -91,6 +91,7 @@ public class SecurityConfig {
                         .loginPage("/login"))
                 .formLogin((f)->f.disable())
                 .logout((logout)->logout
+                        .logoutUrl( "/logout" )
                         .logoutSuccessUrl( "/" )
                         .deleteCookies( "Authorization")
                         .permitAll()); //나중에 추가 셋팅할 것
