@@ -82,21 +82,42 @@ public class WishlistController {
 
 
     @PostMapping("/user/wishlist/add")
-    public ResponseEntity<String> addToWishlist(@RequestHeader("Authorization") String authorizationHeader,
+    public ResponseEntity<String> addToWishlist(HttpServletRequest request,
                                                 @RequestParam("pid") Long popupStoreId) {
-        // Authorization 헤더에서 JWT 토큰 추출하기
-        String token = authorizationHeader.replace("Bearer ", "");
+
+        String authorization =null;
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) { // null 체크 추가
+            for (Cookie cookie : cookies) {
+                if (cookie != null && cookie.getName().equals( "Authorization" )) {
+                    authorization=cookie.getValue();
+                } else if (cookie != null && cookie.getName().equals( "authorization" )) {
+                    authorization=cookie.getValue();
+                }
+            }
+        }
+
+        //Authorization 헤더 검증
+        if (authorization == null) {
+
+            System.out.println("token null");
+            //조건이 해당되면 메소드 종료한다.
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("Token null");
+        }
+
+        String token = authorization;
 
         // JWT 토큰을 사용하여 사용자 정보 가져오기
         String username = jwtUtil.getUsername(token);
 
         if(username.isEmpty()){
-            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
+            return ResponseEntity.status( HttpStatus.NOT_FOUND).body("User not found"); //유저를 찾을 수 없는 경우
         }
 
         UserEntity userEntity=userRepository.findByUsername( username );
         if(userEntity == null){
-            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
+            return ResponseEntity.status( HttpStatus.NOT_FOUND).body("User not found"); //유저를 찾을 수 없는 경우
         }
 
         // popupStoreId를 이용하여 PopupStore 정보 가져오기
@@ -110,6 +131,7 @@ public class WishlistController {
     }
 
 
+/*
     @PostMapping("/user/wishlist/add-temp")
     public ResponseEntity<String> addToWishlistTemp(@RequestParam("id") Long userId,
                                                 @RequestParam("pid") Long popupStoreId) {
@@ -132,6 +154,7 @@ public class WishlistController {
         return ResponseEntity.ok("Added to wishlist successfully");
     }
 
+*/
 
 
 }
