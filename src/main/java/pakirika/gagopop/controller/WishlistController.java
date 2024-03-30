@@ -1,6 +1,8 @@
 package pakirika.gagopop.controller;
 
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,19 +30,45 @@ public class WishlistController {
     private final JWTUtil jwtUtil;
 
     @GetMapping("/user/wishlist")
-    public ResponseEntity<?> getUserWishlistAll(@RequestHeader("Authorization") String authorizationHeader){
+    public ResponseEntity<?> getUserWishlistAll(HttpServletRequest request){
 
-        // Authorization 헤더에서 JWT 토큰 추출하기!
-        String token = authorizationHeader.replace("Bearer ", "");
+        //String token = authorizationHeader.replace("Bearer ", "");
 
-        if(token.isEmpty()){
+        String authorization =null;
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) { // null 체크 추가
+            for (Cookie cookie : cookies) {
+                if (cookie != null && cookie.getName().equals( "Authorization" )) {
+                    authorization=cookie.getValue();
+                } else if (cookie != null && cookie.getName().equals( "authorization" )) {
+                    authorization=cookie.getValue();
+                }
+            }
+        }
+
+        //Authorization 헤더 검증
+        if (authorization == null) {
+
+            System.out.println("token null");
+            //조건이 해당되면 메소드 종료한다.
             return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("Token null");
         }
+
+        String token = authorization;
+        //토큰
+/*
+        if(token.isEmpty()){
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("Token null"); //localhost:3000으로 리다이렉트 하기?
+        }
+*/
         // JWT 토큰에서 유저 이름 가져오기
         String username = jwtUtil.getUsername(token);
         if(username.isEmpty()){
             return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
         }
+        //Cookie[] cookies=request.getCookies();
+
 
         UserEntity userEntity=userRepository.findByUsername( username );
         if(userEntity == null){
@@ -51,7 +79,6 @@ public class WishlistController {
 
         return ResponseEntity.ok(result); //유저가 있으면 검색해서 보내기 (비어있는 경우 빈 객체 반환)
     }
-
 
 
     @PostMapping("/user/wishlist/add")
@@ -77,10 +104,8 @@ public class WishlistController {
         if (popupStore == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Popup store not found");
         }
-
         // WishlistPopupStore에 데이터 추가
         wishlistService.addToWishlist(userEntity, popupStore.get());
-
         return ResponseEntity.ok("Added to wishlist successfully");
     }
 
@@ -106,5 +131,7 @@ public class WishlistController {
 
         return ResponseEntity.ok("Added to wishlist successfully");
     }
+
+
 
 }
