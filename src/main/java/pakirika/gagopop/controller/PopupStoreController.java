@@ -36,7 +36,7 @@ public class PopupStoreController {
     private final JWTUtil jwtUtil;
     
     @GetMapping("popup/find")
-    public ResponseEntity<?> findPopupByNameAndDate(@RequestParam("name") String name,
+    public ResponseEntity<?> findPopupByNameAndDate(@RequestParam("name") String keyword,
                                                     @RequestParam("date") String dateString){
 
 
@@ -45,8 +45,8 @@ public class PopupStoreController {
 
             //Todo
             //지역명 검색했을 때도 나오도록 수정해야함
-            //두개의 리스트 얻어서, 중복 제거할 수 있도록?
-            List<PopupStore> result= popupStoreRepository.findOpenPopupStoresByNameDate( name, localDate );
+            //두개의 리스트 얻어서, 중복 제거할 수 있도록? -> name or address 사용.
+            List<PopupStore> result= popupStoreRepository.findOpenPopupStoresByNameDate( keyword, localDate );
             return ResponseEntity.ok(result);
         //}
     }
@@ -126,7 +126,6 @@ public class PopupStoreController {
                             .collect(Collectors.toList());
                 }
             }
-
 
         final List<Long> finalPopupStoreIdsInWishlist = popupStoreIdsInWishlist;
 
