@@ -17,6 +17,36 @@ public interface PopupStoreRepository extends JpaRepository<PopupStore,Long> {
             nativeQuery=true)
     List<PopupStore> findOpenPopupStoresByNameDate(@Param("keyword") String keyword, @Param("date") LocalDate date);
 
+
+    //키워드 및 날짜로 검색 + 오픈중
+    @Query(value="SELECT * FROM popup_store  WHERE name like %:keyword% OR address like %:keyword% AND " +
+            "start_date<= :date AND end_date >= :date and is_opened is not null ORDER BY start_date ASC, end_date ASC",
+            nativeQuery=true)
+    List<PopupStore> findOpenStoreByKeywordDate(@Param("keyword") String keyword, @Param("date") LocalDate date);
+
+
+    //키워드 및 날짜로 검색 + 오픈예정
+    @Query(value="SELECT * FROM popup_store  WHERE name like %:keyword% OR address like %:keyword% AND " +
+            "start_date> :date ORDER BY start_date ASC, end_date ASC",
+            nativeQuery=true)
+    List<PopupStore> findScheduledStoreByKeywordDate(@Param("keyword") String keyword, @Param("date") LocalDate date);
+
+
+    //키워드 및 날짜로 검색 + 종료
+    @Query(value="SELECT * FROM popup_store  WHERE name like %:keyword% OR address like %:keyword% AND " +
+            " end_date < :date ORDER BY end_date ASC",
+            nativeQuery=true)
+    List<PopupStore> findClosedStoreByKeywordDate(@Param("keyword") String keyword, @Param("date") LocalDate date);
+
+
+    //키워드 및 날짜로 검색 + 종료임박 7일
+    @Query(value="SELECT * FROM popup_store  WHERE name like %:keyword% OR address like %:keyword% AND " +
+            " DATEDIFF(end_date, :date) between 0 and 6  ORDER BY end_date ASC",
+            nativeQuery=true)
+    List<PopupStore> findScheduledToCloseStore(@Param("keyword") String keyword,@Param("date") LocalDate date);
+
+
+
     @Query(value="SELECT * FROM popup_store  WHERE start_date>= :date ORDER BY start_date ASC LIMIT 6",
             nativeQuery=true)
     List<PopupStore> findStoreScheduledToOpenByDate(@Param("date") LocalDate date);
@@ -25,9 +55,14 @@ public interface PopupStoreRepository extends JpaRepository<PopupStore,Long> {
             nativeQuery=true)
     List<PopupStore> findStoreScheduledToCloseByDate(@Param("date") LocalDate date);
     @Query(value="SELECT * FROM popup_store  WHERE start_date<= :date AND" +
-            " end_date >= :date and is_opened is not null LIMIT 6",
+            " end_date >= :date and is_opened is not null LIMIT 5",
             nativeQuery=true)
-    List<PopupStore> findSixStores(@Param("date") LocalDate date);
+    List<PopupStore> findFiveStores(@Param("date") LocalDate date);
+
+    @Query(value="SELECT * FROM popup_store  WHERE start_date<= :date AND" +
+            " end_date >= :date and is_opened is not null And is_promoted is not null ORDER BY end_date",
+            nativeQuery=true)
+    List<PopupStore> findStoreIsPromoted(@Param("date") LocalDate date);
 
     List<PopupStore> findAll();
 

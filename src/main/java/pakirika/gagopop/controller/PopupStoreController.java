@@ -1,7 +1,12 @@
 package pakirika.gagopop.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import pakirika.gagopop.dto.PopupWishDTO;
 import pakirika.gagopop.entity.PopupStore;
@@ -36,21 +41,160 @@ public class PopupStoreController {
     private final JWTUtil jwtUtil;
     
     @GetMapping("popup/find")
-    public ResponseEntity<?> findPopupByNameAndDate(@RequestParam("name") String keyword,
-                                                    @RequestParam("date") String dateString){
-
+    public List<PopupWishDTO> findPopupByNameOrAddress(HttpServletRequest request,
+                                                              @RequestParam("name") String keyword,
+                                                              @RequestParam("date") String dateString){
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate localDate=LocalDate.parse( dateString, formatter );
 
-            //Todo
-            //지역명 검색했을 때도 나오도록 수정해야함
-            //두개의 리스트 얻어서, 중복 제거할 수 있도록? -> name or address 사용.
-            List<PopupStore> result= popupStoreRepository.findOpenPopupStoresByNameDate( keyword, localDate );
-            return ResponseEntity.ok(result);
+            //List<PopupStore> result= popupStoreRepository.findOpenPopupStoresByNameDate( keyword, localDate );
+
+            //TODO
+            //여기서 가져온 리스트들을 오픈중/오픈예정/종료/종료임박으로 나눠서 드려야함
+            //그리고 가능하면 몇개인지도 같이 보내주기
+            //아니지 그냥 이름으로 검색할 때 애초에 나눠서가져오면됨
+
+        //TODO
+        //각각의 스토어가 유저의 위시리스트에 있는지도 같이 반환해야함
+        //쿠키 보고 -> 유저 있는지 확인
+        //          -> 유저가 있으면 -> 찾아서 true/false 넣기
+        //          -->      없으면 -> 그냥 false 넣기
+        String authorization =null;
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) { // null 체크 추가
+            for (Cookie cookie : cookies) {
+                if (cookie != null && cookie.getName().equals( "Authorization" )) {
+                    authorization=cookie.getValue();
+                } else if (cookie != null && cookie.getName().equals( "authorization" )) {
+                    authorization=cookie.getValue();
+                }
+            }
+        }
+        String username = null;
+        if (authorization != null) { //헤더가 있으면
+            String token = authorization; //가져오기
+            // JWT 토큰에서 유저 이름 가져오기
+            username = jwtUtil.getUsername(token); //토큰으로 유저이름 가져오기
+        }
+        UserEntity userEntity = null;
+        if(username != null){ // null이 아니면 username으로 검색
+            userEntity=userRepository.findByUsername( username );
+        }
+
+        List<PopupStore> searchResult= popupStoreRepository.findOpenPopupStoresByNameDate( keyword, localDate );
+
+        List<Long> popupInWishlist = new ArrayList<>();
+
+
+        if (userEntity != null) {
+            List<Wishlist> wishlists=wishlistRepository.findByUserEntity( userEntity );
+            if (wishlists != null) {
+                popupInWishlist=wishlists.stream()
+                        .map( Wishlist::getPopupStore )
+                        .filter( Objects::nonNull )
+                        .map( PopupStore::getId )
+                        .collect( Collectors.toList() );
+            }
+        }
+
+        final List<Long> serchPopupStoreInWishlist = popupInWishlist;
+
+        return searchResult.stream()
+                .map(popupStore -> {
+                    boolean isInWishlist = false;
+                    if (serchPopupStoreInWishlist != null && serchPopupStoreInWishlist.contains(popupStore.getId())) {
+                        isInWishlist = true;
+                    }
+                    return new PopupWishDTO(isInWishlist, popupStore );
+                })
+                .collect(Collectors.toList());
+
+/*        List<PopupStore> openStores =popupStoreRepository.findOpenStoreByKeywordDate( keyword, localDate );
+        popupStoreData.put( "open",openStores );
+        List<PopupStore> scheduledStores =popupStoreRepository.findScheduledStoreByKeywordDate( keyword, localDate );
+        popupStoreData.put( "will-Open",scheduledStores );
+        List<PopupStore> closedStores =popupStoreRepository.findClosedStoreByKeywordDate( keyword, localDate );
+        popupStoreData.put( "closed",closedStores );
+        List<PopupStore> scheduledToCloseStores =popupStoreRepository.findScheduledToCloseStore( keyword, localDate );
+        popupStoreData.put( "will-close",scheduledToCloseStores );*/
+
+
         //}
     }
 
+
+    @GetMapping("popup/find-test")
+    public ResponseEntity<?> findPopupByNameOrAddressWithDateTest(HttpServletRequest request,
+                                                              @RequestParam("name") String keyword,
+                                                              @RequestParam("date") String dateString){
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(dateString, formatter);
+
+        // Retrieve user information if available
+        String authorization = null;
+        String username = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie != null && (cookie.getName().equals("Authorization") || cookie.getName().equals("authorization"))) {
+                    authorization = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        if (authorization != null) {
+            String token = authorization;
+            username = jwtUtil.getUsername(token);
+        }
+
+        UserEntity userEntity = null;
+        if (username != null) {
+            userEntity = userRepository.findByUsername(username);
+        }
+
+        // Map to store results
+        Map<String, List<PopupWishDTO>> resultMap = new HashMap<>();
+
+        // Retrieve lists of PopupStores
+        List<PopupStore> openStores = popupStoreRepository.findOpenStoreByKeywordDate(keyword, localDate);
+        List<PopupStore> scheduledStores = popupStoreRepository.findScheduledStoreByKeywordDate(keyword, localDate);
+        List<PopupStore> closedStores = popupStoreRepository.findClosedStoreByKeywordDate(keyword, localDate);
+        List<PopupStore> scheduledToCloseStores = popupStoreRepository.findScheduledToCloseStore(keyword, localDate);
+
+        // Process each list of PopupStores
+        resultMap.put("openStores", mapToPopupWishDTOList(openStores, userEntity));
+        resultMap.put("scheduledStores", mapToPopupWishDTOList(scheduledStores, userEntity));
+        resultMap.put("closedStores", mapToPopupWishDTOList(closedStores, userEntity));
+        resultMap.put("scheduledToCloseStores", mapToPopupWishDTOList(scheduledToCloseStores, userEntity));
+
+        return ResponseEntity.ok(resultMap);
+    }
+
+    // Method to map PopupStore list to PopupWishDTO list
+    private List<PopupWishDTO> mapToPopupWishDTOList(List<PopupStore> popupStores, UserEntity userEntity) {
+        List<PopupWishDTO> popupWishDTOs = new ArrayList<>();
+        for (PopupStore popupStore : popupStores) {
+            PopupWishDTO popupWishDTO = new PopupWishDTO();
+            popupWishDTO.setPopupStore(popupStore);
+            popupWishDTO.setInWishlist(userEntity != null && isPopupStoreInWishlist(popupStore, userEntity));
+            popupWishDTOs.add(popupWishDTO);
+        }
+        return popupWishDTOs;
+    }
+
+    // Method to check if PopupStore is in the user's wishlist
+    private boolean isPopupStoreInWishlist(PopupStore popupStore, UserEntity userEntity) {
+        List<Wishlist> wishlist = wishlistRepository.findByUserEntity(userEntity);
+        for (Wishlist item : wishlist) {
+            if (item.getPopupStore().equals(popupStore)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @GetMapping("popup/find-route")
     public List<PopupStore>  findPopupRouteByIdList(@RequestParam("pid") List<Long> pid,
@@ -62,9 +206,8 @@ public class PopupStoreController {
         return popupStores;
     }
 
-    @GetMapping("popup/find-all")
+/*    @GetMapping("popup/find-all")
     public List<PopupStore> findPopupAll(@RequestHeader(value="Authorization", required=false) String authorizationHeader){
-
 
         List<PopupStore> allPopupStores = popupStoreRepository.findAll();
         // TODO
@@ -72,27 +215,48 @@ public class PopupStoreController {
         // 일단 데이터가 많이 없으니 구현부터 해보고 추후 날짜 범위 논의 해보기
 
         return allPopupStores;
-    }
+    }*/
 
-    @GetMapping("popup/find-all-with-wish")
-    public List<PopupWishDTO> findPopupAllWithWish(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+    @GetMapping("popup/find-all")
+    public List<PopupWishDTO> findPopupAllWithWish(HttpServletRequest request) {
+
+        String authorization = null;
+        String username = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie != null && (cookie.getName().equals("Authorization") || cookie.getName().equals("authorization"))) {
+                    authorization = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        if (authorization != null) {
+            String token = authorization;
+            username = jwtUtil.getUsername(token);
+        }
+
+        UserEntity userEntity = null;
+        if (username != null) {
+            userEntity = userRepository.findByUsername(username);
+        }
+
         List<PopupStore> allPopupStores = popupStoreRepository.findAll();
 
         List<Long> popupStoreIdsInWishlist = new ArrayList<>();
 
-        if (authorizationHeader != null) {
-            UserEntity userEntity = getUserIdFromAuthorizationHeader(authorizationHeader);
-            if (userEntity != null) {
-                List<Wishlist> wishlists = wishlistRepository.findByUserEntity(userEntity);
-                if (wishlists != null) {
-                    popupStoreIdsInWishlist = wishlists.stream()
-                            .map(Wishlist::getPopupStore)
-                            .filter( Objects::nonNull)
-                            .map(PopupStore::getId)
-                            .collect(Collectors.toList());
-                }
+
+        if (userEntity != null) {
+            List<Wishlist> wishlists=wishlistRepository.findByUserEntity( userEntity );
+            if (wishlists != null) {
+                popupStoreIdsInWishlist=wishlists.stream()
+                        .map( Wishlist::getPopupStore )
+                        .filter( Objects::nonNull )
+                        .map( PopupStore::getId )
+                        .collect( Collectors.toList() );
             }
         }
+
 
         final List<Long> finalPopupStoreIdsInWishlist = popupStoreIdsInWishlist;
 
@@ -160,7 +324,6 @@ public class PopupStoreController {
             return null;
         }
 
-
         return userEntity;
     }
 
@@ -171,9 +334,14 @@ public class PopupStoreController {
 
         LocalDate today=this.getCurrentKoreaLocalDate(); //오늘 날짜 구하기 - 한국 기준
 
-        //핫한 팝업 스토어 리스트 ( 얜 기준을 뭐로 해야할까? )
-        List<PopupStore> sixStores=popupStoreRepository.findSixStores(today);
-        popupStoreData.put("hotStores", sixStores);
+        //Todo
+        //주선님이 주신 데이터로 DB 업데이트하기
+        List<PopupStore> fiveStores=popupStoreRepository.findFiveStores(today);
+        popupStoreData.put("hotStores", fiveStores);
+
+        //핫한 팝업 스토어 리스트 ( 현재 is_promoted 필드가 true인 걸로 임시 설정)
+        List<PopupStore> hotStores=popupStoreRepository.findStoreIsPromoted(today);
+        popupStoreData.put("hotStores", hotStores);
 
         //오픈 예정(오픈 날짜가 현재 날짜랑 가까운 순 -asc 쓰면되겠다)
         List<PopupStore> scheduledToOpen=popupStoreService.getPopupStoreScheduledToOpen( today );

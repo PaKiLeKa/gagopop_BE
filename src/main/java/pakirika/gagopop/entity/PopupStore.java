@@ -33,9 +33,8 @@ public class PopupStore {
     private String info;
     private String snsLink;
     private String imageUrl;
+    private boolean isPromoted;
+    //hotStore 나타내는 필드
 
-    public PopupStore(Long id, String name) {
-        this.id=id;
-        this.name=name;
-    }
+
 }
