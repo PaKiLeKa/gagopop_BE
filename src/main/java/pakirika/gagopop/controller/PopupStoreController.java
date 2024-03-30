@@ -337,7 +337,7 @@ public class PopupStoreController {
         //Todo
         //주선님이 주신 데이터로 DB 업데이트하기
         List<PopupStore> fiveStores=popupStoreRepository.findFiveStores(today);
-        popupStoreData.put("hotStores", fiveStores);
+        popupStoreData.put("Header", fiveStores);
 
         //핫한 팝업 스토어 리스트 ( 현재 is_promoted 필드가 true인 걸로 임시 설정)
         List<PopupStore> hotStores=popupStoreRepository.findStoreIsPromoted(today);
