@@ -17,8 +17,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import pakirika.gagopop.jwt.JWTFilter;
-import pakirika.gagopop.jwt.JWTUtil;
+
 import pakirika.gagopop.service.CustomOAuth2UserService;
 import pakirika.gagopop.oauth2.CustomSuccessHandler;
 
@@ -32,9 +31,9 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
 
-    private final JWTUtil jwtUtil;
+    //private final JWTUtil jwtUtil;
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
+    public WebSecurityCustomizer webSecurityCustomizer( ) {
         return (web) -> web.ignoring().requestMatchers("/popup/**");
     }
 
@@ -79,9 +78,9 @@ public class SecurityConfig {
 
 
         //JWTFilter 추가
-        http
+     /*   http
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);*/
 
         //OAuth2
         http

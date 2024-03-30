@@ -43,6 +43,8 @@ public class JWTFilter extends OncePerRequestFilter {
             for (Cookie cookie : cookies) {
                 if (cookie != null && cookie.getName().equals( "Authorization" )) {
                     authorization=cookie.getValue();
+                } else if (cookie != null && cookie.getName().equals( "authorization" )) {
+                    authorization=cookie.getValue();
                 }
             }
         }
@@ -66,10 +68,10 @@ public class JWTFilter extends OncePerRequestFilter {
         if (jwtUtil.isExpired(token)) {
 
             System.out.println("token expired");
-            //filterChain.doFilter(request, response);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            filterChain.doFilter(request, response);
+            //response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
-            response.getWriter().write("Token expired");
+            //response.getWriter().write("Token expired");
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }

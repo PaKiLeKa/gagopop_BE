@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Component;
 import pakirika.gagopop.dto.CustomOAuth2User;
 import pakirika.gagopop.jwt.JWTUtil;
 
+
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -36,19 +37,21 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, role, 60*60*60L);
+        String token = jwtUtil.createJwt(username, role, 60*60*60*60L);
+
 
         response.addCookie(createCookie("Authorization", token));
-        //response.sendRedirect("/"); //프론트로 리다이렉트로 고치기?
-        super.onAuthenticationSuccess(request, response, authentication);
+        //response.sendRedirect("http://localhost:3000/");
+        response.sendRedirect("/");
     }
 
     private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60*60*60);
-        //cookie.setSecure(true); //https에서만 통신할 수 있도록
+        cookie.setMaxAge(60*60*60*60);
+        cookie.setSecure(true);
         cookie.setPath("/");
+        cookie.setAttribute( "SameSite", "None" );
         cookie.setHttpOnly(true);
 
         return cookie;
