@@ -2,6 +2,7 @@ package pakirika.gagopop.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Lombok;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,20 @@ public class PopupStoreController {
     private final WishlistService wishlistService;
 
     private final JWTUtil jwtUtil;
+
+
+    @GetMapping("popup")
+    public ResponseEntity<?> findByID(HttpServletRequest request, @RequestParam("pid") Long pid) {
+
+        Optional<PopupStore> popupStore=popupStoreService.getPopupStore( pid );
+
+        if(popupStore.isEmpty()){
+            return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( "PopupStore not found" );
+        }
+        //todo
+        //유저 wishlist 정보도 같이 넣어줄 수 있도록 수정하기
+        return ResponseEntity.ok(popupStore.get());
+    }
     
     @GetMapping("popup/find")
     public List<PopupWishDTO> findPopupByNameOrAddress(HttpServletRequest request,
@@ -173,7 +188,7 @@ public class PopupStoreController {
         return ResponseEntity.ok(resultMap);
     }
 
-    // Method to map PopupStore list to PopupWishDTO list
+
     private List<PopupWishDTO> mapToPopupWishDTOList(List<PopupStore> popupStores, UserEntity userEntity) {
         List<PopupWishDTO> popupWishDTOs = new ArrayList<>();
         for (PopupStore popupStore : popupStores) {
@@ -185,7 +200,6 @@ public class PopupStoreController {
         return popupWishDTOs;
     }
 
-    // Method to check if PopupStore is in the user's wishlist
     private boolean isPopupStoreInWishlist(PopupStore popupStore, UserEntity userEntity) {
         List<Wishlist> wishlist = wishlistRepository.findByUserEntity(userEntity);
         for (Wishlist item : wishlist) {
@@ -206,22 +220,10 @@ public class PopupStoreController {
         return popupStores;
     }
 
-/*    @GetMapping("popup/find-all")
-    public List<PopupStore> findPopupAll(@RequestHeader(value="Authorization", required=false) String authorizationHeader){
-
-        List<PopupStore> allPopupStores = popupStoreRepository.findAll();
-        // TODO
-        // 서비스가 커진 후에 날짜 제한 없이 보내면 데이터가 너무 클 것 같다.
-        // 일단 데이터가 많이 없으니 구현부터 해보고 추후 날짜 범위 논의 해보기
-
-        return allPopupStores;
-    }*/
-
     @GetMapping("popup/find-all")
     public List<PopupWishDTO> findPopupAllWithWish(HttpServletRequest request) {
 
         String authorization = null;
-        String username = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -231,6 +233,7 @@ public class PopupStoreController {
                 }
             }
         }
+        String username = null;
         if (authorization != null) {
             String token = authorization;
             username = jwtUtil.getUsername(token);
@@ -305,8 +308,6 @@ public class PopupStoreController {
     }
 
 
-
-    // Assuming you have a method to extract userId from the authorizationHeader
     private UserEntity getUserIdFromAuthorizationHeader(String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
 
@@ -334,8 +335,7 @@ public class PopupStoreController {
 
         LocalDate today=this.getCurrentKoreaLocalDate(); //오늘 날짜 구하기 - 한국 기준
 
-        //Todo
-        //주선님이 주신 데이터로 DB 업데이트하기
+
         List<PopupStore> fiveStores=popupStoreRepository.findFiveStores(today);
         popupStoreData.put("Header", fiveStores);
 

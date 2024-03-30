@@ -15,8 +15,20 @@ import java.util.Optional;
 public class PopupStoreService {
 
     private final PopupStoreRepository popupStoreRepository;
-    //루트찾기
 
+    public Optional<PopupStore> getPopupStore(Long id){
+
+        Optional<PopupStore> result =popupStoreRepository.findById( id );
+
+        return result;
+
+    }
+
+
+
+
+
+    //루트 찾기 전 sort
     public List<PopupStore> sortPopupStore (double latitude, double longitude, List<Long> pid){
         List<PopupStore> popupList = new ArrayList<>();
         List<PopupStore> resultList = new ArrayList<>();
