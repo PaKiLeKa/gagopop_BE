@@ -11,6 +11,7 @@ import pakirika.gagopop.repository.UserRepository;
 import pakirika.gagopop.repository.WishlistRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -87,6 +88,16 @@ public class WishlistService {
     private boolean isPopupStoreInTogoList(PopupStore popupStore) {
         List<TogoListPopupStore> togoListPopupStores = togoListPopupStoreRepository.findByPopupStore(popupStore);
         return !togoListPopupStores.isEmpty();
+    }
+
+    public void delete(UserEntity userEntity, PopupStore popupStore){
+
+        Optional<Wishlist> userWishlist=wishlistRepository.findByUserEntityAndPopupStore( userEntity, popupStore );
+
+        if(userWishlist.isPresent()){
+            wishlistRepository.delete(userWishlist.get());
+        }
+
     }
 
 }
