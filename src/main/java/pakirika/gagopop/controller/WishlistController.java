@@ -126,8 +126,15 @@ public class WishlistController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Popup store not found");
         }
         // WishlistPopupStore에 데이터 추가
-        wishlistService.addToWishlist(userEntity, popupStore.get());
-        return ResponseEntity.ok("Added to wishlist successfully");
+        boolean isDone=wishlistService.addToWishlist( userEntity, popupStore.get() );
+
+        if(isDone){
+            return ResponseEntity.ok("Added to wishlist successfully");
+        }
+        else {
+            return ResponseEntity.ok("Already in Wishlist");
+        }
+
     }
 
 

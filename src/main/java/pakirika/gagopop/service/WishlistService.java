@@ -23,11 +23,24 @@ public class WishlistService {
     private final TogoListPopupStoreRepository togoListPopupStoreRepository;
 
 
-    public void addToWishlist(UserEntity user, PopupStore popupStore) {
-        Wishlist wishlist = new Wishlist();
-        wishlist.setUserEntity( user);
-        wishlist.setPopupStore(popupStore);
-        wishlistRepository.save(wishlist);
+    public boolean addToWishlist(UserEntity userEntity, PopupStore popupStore) {
+
+        boolean isDone=false;
+
+        Optional<Wishlist> existingWishlist = wishlistRepository.findByUserEntityAndPopupStore(userEntity, popupStore);
+
+        if(existingWishlist.isEmpty()){
+            Wishlist wishlist = new Wishlist();
+            wishlist.setUserEntity( userEntity);
+            wishlist.setPopupStore(popupStore);
+            wishlistRepository.save(wishlist);
+
+            return true;
+        }
+        else {
+            return false;
+        }
+
     }
 
 
