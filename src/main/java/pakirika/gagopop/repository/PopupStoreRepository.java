@@ -60,7 +60,7 @@ public interface PopupStoreRepository extends JpaRepository<PopupStore,Long> {
     List<PopupStore> findFiveStores(@Param("date") LocalDate date);
 
     @Query(value="SELECT * FROM popup_store  WHERE start_date<= :date AND" +
-            " end_date >= :date and is_opened is not null And is_promoted is not null ORDER BY end_date",
+            " end_date >= :date and is_opened is not null And is_promoted = TRUE ORDER BY end_date",
             nativeQuery=true)
     List<PopupStore> findStoreIsPromoted(@Param("date") LocalDate date);
 
