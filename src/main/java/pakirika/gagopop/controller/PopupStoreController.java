@@ -85,10 +85,9 @@ public class PopupStoreController {
 
         if(existingWishlist.isEmpty()){
             popupWishDTO.setInWishlist( false );
+        }else {
+            popupWishDTO.setInWishlist( true );
         }
-        popupWishDTO.setInWishlist( true );
-
-
 
         return ResponseEntity.ok(popupWishDTO);
     }
