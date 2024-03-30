@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import pakirika.gagopop.dto.PopupWishDTO;
@@ -52,7 +53,44 @@ public class PopupStoreController {
         }
         //todo
         //유저 wishlist 정보도 같이 넣어줄 수 있도록 수정하기
-        return ResponseEntity.ok(popupStore.get());
+        String authorization =null;
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) { // null 체크 추가
+            for (Cookie cookie : cookies) {
+                if (cookie != null && cookie.getName().equals( "Authorization" )) {
+                    authorization=cookie.getValue();
+                } else if (cookie != null && cookie.getName().equals( "authorization" )) {
+                    authorization=cookie.getValue();
+                }
+            }
+        }
+        String username = null;
+        if (authorization != null) { //헤더가 있으면
+            String token = authorization; //가져오기
+            // JWT 토큰에서 유저 이름 가져오기
+            username = jwtUtil.getUsername(token); //토큰으로 유저이름 가져오기
+        }
+        UserEntity userEntity = null;
+        if(username != null){ // null이 아니면 username으로 검색
+            userEntity=userRepository.findByUsername( username );
+        }
+
+
+        //userEntity가 null이면 false 넣고 아니면  -> wishlist 찾아서 popupstore 있으면 같이넣기
+        Optional<Wishlist> existingWishlist = wishlistRepository.findByUserEntityAndPopupStore(userEntity, popupStore.get());
+
+        PopupWishDTO popupWishDTO=new PopupWishDTO();
+        popupWishDTO.setPopupStore( popupStore.get() );
+
+        if(existingWishlist.isEmpty()){
+            popupWishDTO.setInWishlist( false );
+        }
+        popupWishDTO.setInWishlist( true );
+
+
+
+        return ResponseEntity.ok(popupWishDTO);
     }
     
     @GetMapping("popup/find")
