@@ -1,18 +1,20 @@
 package pakirika.gagopop.service;
 
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pakirika.gagopop.dto.UserDTO;
 import pakirika.gagopop.dto.UserProfileDTO;
+import pakirika.gagopop.entity.Stamp;
 import pakirika.gagopop.entity.UserEntity;
-import pakirika.gagopop.repository.StampListRepository;
+import pakirika.gagopop.entity.UserStamp;
 import pakirika.gagopop.repository.TogoListRepository;
 import pakirika.gagopop.repository.UserRepository;
+import pakirika.gagopop.repository.UserStampRepository;
 import pakirika.gagopop.repository.WishlistRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -26,7 +28,7 @@ public class UserService {
 
     private final TogoListRepository togoListRepository;
 
-    private final StampListRepository stampListRepository;
+    private final UserStampRepository userStampRepository;
 
 
 
@@ -37,7 +39,7 @@ public class UserService {
 
         Long wishListTotal=wishlistRepository.countByUserEntity( userEntity );
         Long togoListTotal=togoListRepository.countByUserEntity( userEntity );
-        Long stampTotal=stampListRepository.countByUserEntity( userEntity );
+        Long stampTotal=userStampRepository.countByUserEntity( userEntity );
 
         userProfile.setEmail( userEntity.getEmail() );
         userProfile.setNickname( userEntity.getNickname() );
@@ -59,8 +61,12 @@ public class UserService {
 
     //Todo
     //유저 stamp 전체 가져오기
+    public List<Stamp> findUsersStampAll(UserEntity userEntity){
 
+        List<Stamp> stamps=userStampRepository.findByUserEntity( userEntity );
 
+        return stamps;
+    }
 
 
 

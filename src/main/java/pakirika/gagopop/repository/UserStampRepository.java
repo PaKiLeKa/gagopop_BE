@@ -9,4 +9,7 @@ import java.util.List;
 
 public interface UserStampRepository extends JpaRepository<UserStamp, Long> {
     List<Stamp> findByUserEntity(UserEntity userEntity);
+
+    Long countByUserEntity(UserEntity userEntity);
+
 }
