@@ -32,10 +32,10 @@ public class SecurityConfig {
     private final CustomSuccessHandler customSuccessHandler;
 
     //private final JWTUtil jwtUtil;
-    @Bean
+/*    @Bean
     public WebSecurityCustomizer webSecurityCustomizer( ) {
         return (web) -> web.ignoring().requestMatchers("/popup/**");
-    }
+    }*/
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws  Exception{
