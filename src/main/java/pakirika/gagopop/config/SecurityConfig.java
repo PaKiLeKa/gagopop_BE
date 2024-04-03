@@ -92,7 +92,8 @@ public class SecurityConfig {
                 .formLogin((f)->f.disable())
                 .logout((logout)->logout
                         .logoutUrl( "/logout" )
-                        .logoutSuccessUrl( "/" )
+                        //.logoutSuccessUrl( "http://localhost:3000" )
+                        .logoutSuccessUrl( "https://gagopop.vercel.app/" )
                         .deleteCookies( "Authorization")
                         .permitAll()); //나중에 추가 셋팅할 것
         //.oauth2Login( Customizer.withDefaults() );

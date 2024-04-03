@@ -14,6 +14,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
                 .exposedHeaders("Set-Cookie")
                 .exposedHeaders("Authorization")
                 .allowedHeaders("*")
-                .allowedOrigins("http://localhost:3000");
+                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins( "https://gagopop.vercel.app/");
     }
 }
