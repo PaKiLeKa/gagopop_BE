@@ -368,7 +368,7 @@ public class PopupStoreController {
     @GetMapping("/popup/info")
     public Map<String, List<PopupStore>> popupInfo(){
 
-        Map<String, List<PopupStore>> popupStoreData = new HashMap<>();
+        Map<String, List<PopupStore>> popupStoreData = new LinkedHashMap<>();
 
         LocalDate today=this.getCurrentKoreaLocalDate(); //오늘 날짜 구하기 - 한국 기준
 
