@@ -33,7 +33,7 @@ public class UserStampController {
 
     private final UserStampService userStampService;
 
-    private final AmazonS3Client amazonS3Client;
+    //private final AmazonS3Client amazonS3Client;
 
 
 
@@ -62,18 +62,37 @@ public class UserStampController {
                                        @RequestParam String withWho,
                                        @RequestParam MultipartFile multipartFile) throws IOException {
         Optional<UserEntity> optionalUser=userService.findUser( request );
+
         if(optionalUser.isEmpty()){
             return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
         }
 
-/*      Long popupID = Long.valueOf( request.getParameter( "pid" ) );
-        LocalDate date = LocalDate.parse( request.getParameter( "date") );
-        String content = request.getParameter( "content" );
-        String withWho = request.getParameter( "withWho" );*/
+        boolean isCreated =userStampService.createUserStamp( optionalUser.get(), pid, multipartFile, date, content, withWho );
+
+        if(isCreated){
+            return ResponseEntity.ok("Updated user stamp list");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( "Stamp already exist" );
+        }
+
+    }
+
+    @PostMapping(path = "/user/stamp/new-test", consumes={MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity newUserStampTest(HttpServletRequest request,
+                                       @RequestParam Long pid,
+                                       @RequestParam String date,
+                                       @RequestParam String content,
+                                       @RequestParam String withWho,
+                                       @RequestPart MultipartFile img) throws IOException {
+/*        Optional<UserEntity> optionalUser=userService.findUser( request );
+        if(optionalUser.isEmpty()){
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
+        }*/
 
         LocalDate localDate = LocalDate.parse( date );
-
-        boolean isCreated =userStampService.createUserStamp( optionalUser.get(), pid, multipartFile, localDate, content, withWho );
+        UserEntity testUser=userRepository.getById( 1L );
+        boolean isCreated =userStampService.createUserStamp( testUser, pid, img, date, content, withWho );
 
         if(isCreated){
             return ResponseEntity.ok("Updated user stamp list");

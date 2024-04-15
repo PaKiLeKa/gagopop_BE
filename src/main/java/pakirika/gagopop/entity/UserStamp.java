@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -20,6 +22,9 @@ public class UserStamp {
     @ManyToOne
     @JoinColumn(name = "stamp_id", referencedColumnName = "id")
     private Stamp stamp;
+
+
+    private LocalDateTime date;
 
     private String picture;
 
