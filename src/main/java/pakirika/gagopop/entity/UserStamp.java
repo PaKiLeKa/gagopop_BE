@@ -20,4 +20,10 @@ public class UserStamp {
     @ManyToOne
     @JoinColumn(name = "stamp_id", referencedColumnName = "id")
     private Stamp stamp;
+
+    private String picture;
+
+    private String content;
+
+    private String withWho;
 }
