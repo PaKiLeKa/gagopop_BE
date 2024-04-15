@@ -7,12 +7,11 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
 import pakirika.gagopop.entity.Stamp;
 import pakirika.gagopop.entity.UserEntity;
 import pakirika.gagopop.repository.UserRepository;
@@ -20,6 +19,7 @@ import pakirika.gagopop.service.UserService;
 import pakirika.gagopop.service.UserStampService;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -54,19 +54,26 @@ public class UserStampController {
 
     //TODO
     //스템프 발급(게시글 등록)
-    @PostMapping("/user/stamp/new")
-    public ResponseEntity newUserStamp(HttpServletRequest request, @RequestParam("file") File file){
+    @PostMapping(path = "/user/stamp/new", consumes={MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity newUserStamp(HttpServletRequest request,
+                                       @RequestParam Long pid,
+                                       @RequestParam String date,
+                                       @RequestParam String content,
+                                       @RequestParam String withWho,
+                                       @RequestParam MultipartFile multipartFile) {
         Optional<UserEntity> optionalUser=userService.findUser( request );
         if(optionalUser.isEmpty()){
             return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
         }
 
-        Long popupID = Long.valueOf( request.getParameter( "pid" ) );
+/*      Long popupID = Long.valueOf( request.getParameter( "pid" ) );
         LocalDate date = LocalDate.parse( request.getParameter( "date") );
         String content = request.getParameter( "content" );
-        String withWho = request.getParameter( "withWho" );
+        String withWho = request.getParameter( "withWho" );*/
 
-        boolean isCreated =userStampService.createUserStamp( optionalUser.get(), popupID, file, date, content, withWho );
+        LocalDate localDate = LocalDate.parse( date );
+
+        boolean isCreated =userStampService.createUserStamp( optionalUser.get(), pid, multipartFile, localDate, content, withWho );
 
         if(isCreated){
             return ResponseEntity.ok("Updated user stamp list");

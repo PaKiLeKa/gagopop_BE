@@ -5,12 +5,14 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pakirika.gagopop.entity.*;
 import pakirika.gagopop.repository.PopupStoreRepository;
 import pakirika.gagopop.repository.StampRepository;
 import pakirika.gagopop.repository.UserStampRepository;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,7 +32,7 @@ public class UserStampService {
 
     //TODO
     //스템프 발급(게시글 등록)
-    public boolean createUserStamp(UserEntity user, Long popupId, File file, LocalDate date, String content, String withWho) {
+    public boolean createUserStamp(UserEntity user, Long popupId, MultipartFile multipartFile, LocalDate date, String content, String withWho) {
 
         Optional<PopupStore> popupStore=popupStoreRepository.findById( popupId );
         Optional<Stamp> stamp = stampRepository.findByPopupStore( popupStore.get() );
@@ -48,11 +50,13 @@ public class UserStampService {
 
             String fileName = fileNamePre + "-" + uuids;
 
+            File file=new File( multipartFile.getOriginalFilename() );
+            multipartFile.transferTo(file);
+
             //Todo
             //Try catch로 변경하기
             amazonS3Client.putObject( new PutObjectRequest( bucketName, fileName, file ).withCannedAcl( CannedAccessControlList.PublicRead ) );
             String fileUrl=amazonS3Client.getUrl( bucketName, fileName ).toString();
-
 
             UserStamp userStamp = new UserStamp();
 
