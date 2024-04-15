@@ -60,7 +60,7 @@ public class UserStampController {
                                        @RequestParam String date,
                                        @RequestParam String content,
                                        @RequestParam String withWho,
-                                       @RequestParam MultipartFile multipartFile) {
+                                       @RequestParam MultipartFile multipartFile) throws IOException {
         Optional<UserEntity> optionalUser=userService.findUser( request );
         if(optionalUser.isEmpty()){
             return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우

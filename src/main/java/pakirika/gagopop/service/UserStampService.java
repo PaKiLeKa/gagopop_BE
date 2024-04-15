@@ -32,7 +32,7 @@ public class UserStampService {
 
     //TODO
     //스템프 발급(게시글 등록)
-    public boolean createUserStamp(UserEntity user, Long popupId, MultipartFile multipartFile, LocalDate date, String content, String withWho) {
+    public boolean createUserStamp(UserEntity user, Long popupId, MultipartFile multipartFile, LocalDate date, String content, String withWho) throws IOException {
 
         Optional<PopupStore> popupStore=popupStoreRepository.findById( popupId );
         Optional<Stamp> stamp = stampRepository.findByPopupStore( popupStore.get() );
