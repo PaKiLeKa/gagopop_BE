@@ -2,13 +2,9 @@ package pakirika.gagopop.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Lombok;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import pakirika.gagopop.dto.PopupWishDTO;
 import pakirika.gagopop.entity.PopupStore;
@@ -19,6 +15,7 @@ import pakirika.gagopop.repository.UserRepository;
 import pakirika.gagopop.repository.WishlistRepository;
 import pakirika.gagopop.service.PopupStoreService;
 import pakirika.gagopop.repository.PopupStoreRepository;
+import pakirika.gagopop.service.UserService;
 import pakirika.gagopop.service.WishlistService;
 
 import java.time.LocalDate;
@@ -42,6 +39,8 @@ public class PopupStoreController {
 
     private final JWTUtil jwtUtil;
 
+    private final UserService userService;
+
 
     @GetMapping("popup")
     public ResponseEntity<?> findByID(HttpServletRequest request, @RequestParam("pid") Long pid) {
@@ -51,30 +50,14 @@ public class PopupStoreController {
         if(popupStore.isEmpty()){
             return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( "PopupStore not found" );
         }
-        //todo
-        //유저 wishlist 정보도 같이 넣어줄 수 있도록 수정하기
-        String authorization =null;
 
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) { // null 체크 추가
-            for (Cookie cookie : cookies) {
-                if (cookie != null && cookie.getName().equals( "Authorization" )) {
-                    authorization=cookie.getValue();
-                } else if (cookie != null && cookie.getName().equals( "authorization" )) {
-                    authorization=cookie.getValue();
-                }
-            }
+
+        Optional<UserEntity> optionalUser=userService.findUser( request );
+        if(optionalUser.isEmpty()){
+            return null; //유저를 찾을 수 없는 경우
         }
-        String username = null;
-        if (authorization != null) { //헤더가 있으면
-            String token = authorization; //가져오기
-            // JWT 토큰에서 유저 이름 가져오기
-            username = jwtUtil.getUsername(token); //토큰으로 유저이름 가져오기
-        }
-        UserEntity userEntity = null;
-        if(username != null){ // null이 아니면 username으로 검색
-            userEntity=userRepository.findByUsername( username );
-        }
+
+        UserEntity userEntity = optionalUser.get();
 
 
         //userEntity가 null이면 false 넣고 아니면  -> wishlist 찾아서 popupstore 있으면 같이넣기
@@ -100,40 +83,15 @@ public class PopupStoreController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate localDate=LocalDate.parse( dateString, formatter );
 
-            //List<PopupStore> result= popupStoreRepository.findOpenPopupStoresByNameDate( keyword, localDate );
-
-            //TODO
-            //여기서 가져온 리스트들을 오픈중/오픈예정/종료/종료임박으로 나눠서 드려야함
-            //그리고 가능하면 몇개인지도 같이 보내주기
-            //아니지 그냥 이름으로 검색할 때 애초에 나눠서가져오면됨
 
         //TODO
         //각각의 스토어가 유저의 위시리스트에 있는지도 같이 반환해야함
         //쿠키 보고 -> 유저 있는지 확인
         //          -> 유저가 있으면 -> 찾아서 true/false 넣기
         //          -->      없으면 -> 그냥 false 넣기
-        String authorization =null;
+        Optional<UserEntity> optionalUser=userService.findUser( request );
 
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) { // null 체크 추가
-            for (Cookie cookie : cookies) {
-                if (cookie != null && cookie.getName().equals( "Authorization" )) {
-                    authorization=cookie.getValue();
-                } else if (cookie != null && cookie.getName().equals( "authorization" )) {
-                    authorization=cookie.getValue();
-                }
-            }
-        }
-        String username = null;
-        if (authorization != null) { //헤더가 있으면
-            String token = authorization; //가져오기
-            // JWT 토큰에서 유저 이름 가져오기
-            username = jwtUtil.getUsername(token); //토큰으로 유저이름 가져오기
-        }
-        UserEntity userEntity = null;
-        if(username != null){ // null이 아니면 username으로 검색
-            userEntity=userRepository.findByUsername( username );
-        }
+        UserEntity userEntity = optionalUser.get();
 
         List<PopupStore> searchResult= popupStoreRepository.findOpenPopupStoresByNameDate( keyword, localDate );
 
@@ -260,26 +218,9 @@ public class PopupStoreController {
     @GetMapping("popup/find-all")
     public List<PopupWishDTO> findPopupAllWithWish(HttpServletRequest request) {
 
-        String authorization = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie != null && (cookie.getName().equals("Authorization") || cookie.getName().equals("authorization"))) {
-                    authorization = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        String username = null;
-        if (authorization != null) {
-            String token = authorization;
-            username = jwtUtil.getUsername(token);
-        }
+        Optional<UserEntity> optionalUser=userService.findUser( request );
 
-        UserEntity userEntity = null;
-        if (username != null) {
-            userEntity = userRepository.findByUsername(username);
-        }
+        UserEntity userEntity = optionalUser.get();
 
         List<PopupStore> allPopupStores = popupStoreRepository.findAll();
 
@@ -296,40 +237,6 @@ public class PopupStoreController {
                         .collect( Collectors.toList() );
             }
         }
-
-
-        final List<Long> finalPopupStoreIdsInWishlist = popupStoreIdsInWishlist;
-
-        return allPopupStores.stream()
-                .map(popupStore -> {
-                    boolean isInWishlist = false;
-                    if (finalPopupStoreIdsInWishlist != null && finalPopupStoreIdsInWishlist.contains(popupStore.getId())) {
-                        isInWishlist = true;
-                    }
-                    return new PopupWishDTO(isInWishlist, popupStore );
-                })
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("popup/find-all-with-wish-temp")
-    public List<PopupWishDTO> findPopupAllWithWishTemp(@RequestParam(name="id")Long userId) {
-        List<PopupStore> allPopupStores = popupStoreRepository.findAll();
-
-        List<Long> popupStoreIdsInWishlist = new ArrayList<>();
-
-
-        Optional<UserEntity> userEntity=userRepository.findById( userId );
-
-            if (userEntity.isPresent()) {
-                List<Wishlist> wishlists = wishlistRepository.findByUserEntity(userEntity.get());
-                if (wishlists != null) {
-                    popupStoreIdsInWishlist = wishlists.stream()
-                            .map(Wishlist::getPopupStore)
-                            .filter( Objects::nonNull)
-                            .map(PopupStore::getId)
-                            .collect(Collectors.toList());
-                }
-            }
 
         final List<Long> finalPopupStoreIdsInWishlist = popupStoreIdsInWishlist;
 
