@@ -12,7 +12,7 @@ import pakirika.gagopop.entity.UserEntity;
 import pakirika.gagopop.jwt.JWTUtil;
 import pakirika.gagopop.repository.TogoListRepository;
 import pakirika.gagopop.repository.UserRepository;
-import pakirika.gagopop.repository.UserStampRepository;
+import pakirika.gagopop.repository.StampRepository;
 import pakirika.gagopop.repository.WishlistRepository;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class UserService {
 
     private final TogoListRepository togoListRepository;
 
-    private final UserStampRepository userStampRepository;
+    private final StampRepository stampRepository;
 
     private final JWTUtil jwtUtil;
 
@@ -41,7 +41,7 @@ public class UserService {
 
         Long wishListTotal=wishlistRepository.countByUserEntity( userEntity );
         Long togoListTotal=togoListRepository.countByUserEntity( userEntity );
-        Long stampTotal=userStampRepository.countByUserEntity( userEntity );
+        Long stampTotal=stampRepository.countByUserEntity( userEntity );
 
         userProfile.setEmail( userEntity.getEmail() );
         userProfile.setNickname( userEntity.getNickname() );
@@ -66,7 +66,7 @@ public class UserService {
     //유저 stamp 가져옴! -> API로 어떻게 넘길지 생각해보기
     public List<Stamp> findUsersStampAll(UserEntity userEntity) {
 
-        List<Stamp> stamps=userStampRepository.findByUserEntity( userEntity );
+        List<Stamp> stamps=stampRepository.findByUserEntity( userEntity );
 
         return stamps;
     }

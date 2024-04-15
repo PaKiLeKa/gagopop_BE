@@ -1,9 +1,6 @@
 package pakirika.gagopop.controller;
 
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,24 +13,20 @@ import pakirika.gagopop.entity.Stamp;
 import pakirika.gagopop.entity.UserEntity;
 import pakirika.gagopop.repository.UserRepository;
 import pakirika.gagopop.service.UserService;
-import pakirika.gagopop.service.UserStampService;
+import pakirika.gagopop.service.StampService;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-public class UserStampController {
+public class StampController {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    private final UserStampService userStampService;
-
-    //private final AmazonS3Client amazonS3Client;
+    private final StampService stampService;
 
 
 
@@ -60,14 +53,14 @@ public class UserStampController {
                                        @RequestParam String date,
                                        @RequestParam String content,
                                        @RequestParam String withWho,
-                                       @RequestParam MultipartFile multipartFile) throws IOException {
+                                       @RequestPart MultipartFile img) throws IOException {
         Optional<UserEntity> optionalUser=userService.findUser( request );
 
         if(optionalUser.isEmpty()){
             return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
         }
 
-        boolean isCreated =userStampService.createUserStamp( optionalUser.get(), pid, multipartFile, date, content, withWho );
+        boolean isCreated =stampService.createUserStamp( optionalUser.get(), pid, img, date, content, withWho );
 
         if(isCreated){
             return ResponseEntity.ok("Updated user stamp list");
@@ -85,14 +78,10 @@ public class UserStampController {
                                        @RequestParam String content,
                                        @RequestParam String withWho,
                                        @RequestPart MultipartFile img) throws IOException {
-/*        Optional<UserEntity> optionalUser=userService.findUser( request );
-        if(optionalUser.isEmpty()){
-            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
-        }*/
 
         LocalDate localDate = LocalDate.parse( date );
-        UserEntity testUser=userRepository.getById( 102L );
-        boolean isCreated =userStampService.createUserStamp( testUser, pid, img, date, content, withWho );
+        UserEntity testUser=userRepository.getById( 1L );
+        boolean isCreated =stampService.createUserStamp( testUser, pid, img, date, content, withWho );
 
         if(isCreated){
             return ResponseEntity.ok("Updated user stamp list");
@@ -100,15 +89,12 @@ public class UserStampController {
         else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( "Stamp already exist" );
         }
-
     }
-
 
     //TODO
     //방문 인증 내용 수정
     @PostMapping("/user/stamp/update")
     public ResponseEntity updateUserStamp(HttpServletRequest request){
-
         return ResponseEntity.ok("Updated user stamp list");
     }
 
