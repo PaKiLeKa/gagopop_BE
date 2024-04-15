@@ -91,7 +91,7 @@ public class UserStampController {
         }*/
 
         LocalDate localDate = LocalDate.parse( date );
-        UserEntity testUser=userRepository.getById( 1L );
+        UserEntity testUser=userRepository.getById( 102L );
         boolean isCreated =userStampService.createUserStamp( testUser, pid, img, date, content, withWho );
 
         if(isCreated){
