@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,7 +16,7 @@ public class Stamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity userEntity;
 
@@ -23,8 +24,7 @@ public class Stamp {
     @JoinColumn(name = "popup_store_id", referencedColumnName = "id")
     private PopupStore popupStore;
 
-
-    private LocalDateTime date;
+    private LocalDate date;
 
     private String picture;
 
