@@ -37,7 +37,7 @@ public class WishlistController {
 
         Optional<UserEntity> optionalUser=userService.findUser( request );
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status( HttpStatus.NOT_FOUND).body("User not found"); //유저를 찾을 수 없는 경우
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
         }
         List<WishTogoDTO> result = wishlistService.getPopupStoresInWishlistWithTogoByUserId(optionalUser.get().getId());
 
@@ -49,7 +49,7 @@ public class WishlistController {
                                                 @RequestParam("pid") Long popupStoreId) {
         Optional<UserEntity> optionalUser=userService.findUser( request );
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status( HttpStatus.NOT_FOUND).body("User not found"); //유저를 찾을 수 없는 경우
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
         }
 
         // popupStoreId를 이용하여 PopupStore 정보 가져오기
@@ -75,7 +75,7 @@ public class WishlistController {
                                                 @RequestParam("pid") Long popupStoreId) {
         Optional<UserEntity> optionalUser=userService.findUser( request );
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status( HttpStatus.NOT_FOUND).body("User not found"); //유저를 찾을 수 없는 경우
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
         }
 
         // popupStoreId를 이용하여 PopupStore 정보 가져오기

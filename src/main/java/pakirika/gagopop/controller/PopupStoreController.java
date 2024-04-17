@@ -54,7 +54,7 @@ public class PopupStoreController {
 
         Optional<UserEntity> optionalUser=userService.findUser( request );
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( "User not found" ); //유저를 찾을 수 없는 경우
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( "User not found" ); //유저를 찾을 수 없는 경우
         }
 
         UserEntity userEntity = optionalUser.get();
