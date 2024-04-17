@@ -54,7 +54,7 @@ public class PopupStoreController {
 
         Optional<UserEntity> optionalUser=userService.findUser( request );
         if(optionalUser.isEmpty()){
-            return null; //유저를 찾을 수 없는 경우
+            return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( "User not found" ); //유저를 찾을 수 없는 경우
         }
 
         UserEntity userEntity = optionalUser.get();
@@ -220,15 +220,14 @@ public class PopupStoreController {
 
         Optional<UserEntity> optionalUser=userService.findUser( request );
 
-        UserEntity userEntity = optionalUser.get();
 
         List<PopupStore> allPopupStores = popupStoreRepository.findAll();
 
         List<Long> popupStoreIdsInWishlist = new ArrayList<>();
 
 
-        if (userEntity != null) {
-            List<Wishlist> wishlists=wishlistRepository.findByUserEntity( userEntity );
+        if (optionalUser.isPresent()) {
+            List<Wishlist> wishlists=wishlistRepository.findByUserEntity( optionalUser.get() );
             if (wishlists != null) {
                 popupStoreIdsInWishlist=wishlists.stream()
                         .map( Wishlist::getPopupStore )
