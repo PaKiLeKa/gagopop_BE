@@ -90,7 +90,7 @@ public class UserService {
         if (authorization == null) {
             System.out.println( "token null" );
             //조건이 해당되면 메소드 종료한다.
-            return null;
+            return Optional.empty();
         }
 
         String token=authorization;
@@ -98,7 +98,7 @@ public class UserService {
         // JWT 토큰에서 유저 이름 가져오기
         UserEntity userEntity=userRepository.findByUsername( jwtUtil.getUsername( token ) );
         if (userEntity == null) {
-            return null;
+            return Optional.empty();
         }
 
         return Optional.of( userEntity );
