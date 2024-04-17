@@ -32,7 +32,7 @@ public class UserController {
         Optional<UserEntity> optionalUser=userService.findUser( request );
 
         if(optionalUser.isEmpty()){
-            return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( "User not found" );
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( "User not found" );
         }
 
         UserProfileDTO userProfile=userService.getUserProfile( optionalUser.get() );
