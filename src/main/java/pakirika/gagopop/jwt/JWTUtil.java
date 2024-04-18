@@ -1,6 +1,7 @@
 package pakirika.gagopop.jwt;
 
 import io.jsonwebtoken.*;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,23 +18,41 @@ public class JWTUtil {
 
     public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
 
-
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
-
     public String getUsername(String token) {
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+        } catch (ExpiredJwtException e) {
+            System.out.println( "getUsername | e = " + e  );
+            return null;
+        }
+    }
+    /* public String getUsername(String token) {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
-    }
+    }*/
 
     public String getRole(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+        }
+        catch (ExpiredJwtException e) {
+            System.out.println( "getRole | e = " + e  );
+            return null;
+        }
     }
 
     public Boolean isExpired(String token) {
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            System.out.println( "isExpired | e = " + e  );
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+            return false;
+        }catch (JwtException e){
+            return false;
+        }
     }
 
     public String createJwt(String username, String role, Long expiredMs) {
