@@ -97,12 +97,10 @@ public class UserService {
 
         // JWT 토큰에서 유저 이름 가져오기
         String username=jwtUtil.getUsername( token );
-        UserEntity userEntity = new UserEntity();
-        if(username != null) {
-            userEntity=userRepository.findByUsername( jwtUtil.getUsername( token ) );
-            if (userEntity == null) {
-                return Optional.empty();
-            }
+
+        UserEntity userEntity=userRepository.findByUsername( jwtUtil.getUsername( token ) );
+        if (userEntity == null) {
+            return Optional.empty();
         }
 
         return Optional.of( userEntity );
