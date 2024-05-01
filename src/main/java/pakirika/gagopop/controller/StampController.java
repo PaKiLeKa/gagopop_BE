@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pakirika.gagopop.dto.StampDTO;
 import pakirika.gagopop.dto.TotalStampDTO;
+import pakirika.gagopop.entity.Stamp;
 import pakirika.gagopop.entity.UserEntity;
 import pakirika.gagopop.repository.UserRepository;
 import pakirika.gagopop.service.UserService;
@@ -28,7 +29,12 @@ public class StampController {
 
     private final StampService stampService;
 
+    private final Long testUserID = 1L;
 
+
+
+    //TODO
+    //중복 에러 처리!!!!
     @PostMapping(path = "/user/stamp/new", consumes={MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity newUserStamp(HttpServletRequest request,
                                        @RequestParam Long pid,
@@ -41,6 +47,8 @@ public class StampController {
         if(optionalUser.isEmpty()){
             return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
         }
+
+
 
         boolean isCreated =stampService.createUserStamp( optionalUser.get(), pid, img, date, content, withWho );
 
@@ -62,7 +70,7 @@ public class StampController {
                                        @RequestPart MultipartFile img) throws IOException {
 
         LocalDate localDate = LocalDate.parse( date );
-        UserEntity testUser=userRepository.getById( 1L );
+        UserEntity testUser=userRepository.getById( testUserID );
         boolean isCreated =stampService.createUserStamp( testUser, pid, img, date, content, withWho );
 
         if(isCreated){
@@ -73,11 +81,38 @@ public class StampController {
         }
     }
 
-    //TODO
-    //방문 인증 내용 수정
-    @PostMapping("/user/stamp/update")
-    public ResponseEntity updateUserStamp(HttpServletRequest request){
-        return ResponseEntity.ok("Updated user stamp list");
+    //수정
+    @PostMapping(path = "/user/stamp/update", consumes={MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity updateUserStamp(HttpServletRequest request, @RequestParam StampDTO stamp, @RequestParam MultipartFile img) throws IOException {
+        Optional<UserEntity> optionalUser = userService.findUser( request );
+
+        if(optionalUser.isEmpty()){
+            return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( "Unauthorized" );
+        }
+
+        Stamp resultStamp=stampService.updateStamp( stamp, img );
+
+        if(resultStamp == null){
+            return ResponseEntity.status( HttpStatus.BAD_REQUEST).body( "Error: Stamp not updated" );
+        }
+
+        StampDTO stampDTO = stampService.getDetail( optionalUser.get(), resultStamp.getId() );
+
+        return ResponseEntity.ok(stampDTO);
+    }
+
+    @PostMapping(path = "/user/stamp/update-test",  consumes={MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity updateUserStampTest(HttpServletRequest request, StampDTO stamp, @RequestParam MultipartFile img) throws IOException {
+        UserEntity testUser=userRepository.getById(testUserID);
+
+        Stamp resultStamp=stampService.updateStamp( stamp, img );
+
+        if(resultStamp == null ){
+            return ResponseEntity.status( HttpStatus.BAD_REQUEST).body( "Error: Stamp not updated" );
+        }
+        StampDTO stampDTO = stampService.getDetail( testUser, resultStamp.getId() );
+
+        return ResponseEntity.ok(stampDTO);
     }
 
     //삭제
@@ -103,7 +138,7 @@ public class StampController {
     @PostMapping("/user/stamp/delete-test")
     public ResponseEntity deleteUserStampTest(HttpServletRequest request, @RequestParam Long pid) throws IOException {
 
-        UserEntity testUser=userRepository.getById( 1L );
+        UserEntity testUser=userRepository.getById( testUserID );
         boolean isDeleted=stampService.deleteStamp( testUser, pid );
 
         if(!isDeleted){
@@ -134,7 +169,7 @@ public class StampController {
     //유저 스템프 전체 조회 테스트
     @GetMapping("/user/stamp/all-test")
     public ResponseEntity<?> showUserStampAllTest(HttpServletRequest request, @RequestParam("date") String dateString) throws IOException {
-        UserEntity testUser=userRepository.getById( 1L );
+        UserEntity testUser=userRepository.getById( testUserID );
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(dateString, formatter);
@@ -165,7 +200,7 @@ public class StampController {
 
     @GetMapping("/user/stamp/show-test")
     public ResponseEntity<?> showUserStampDetailTest(HttpServletRequest request, @RequestParam("sid") Long sid){
-        UserEntity testUser=userRepository.getById( 1L );
+        UserEntity testUser=userRepository.getById( testUserID );
 
         StampDTO stampDTO=stampService.getDetail( testUser, sid );
 

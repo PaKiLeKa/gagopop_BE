@@ -32,12 +32,8 @@ public class StampService {
     private final StampRepository stampRepository;
     private final PopupStoreRepository popupStoreRepository;
 
-
     private final AmazonS3 s3;
 
-
-    //TODO
-    //스탬프 전체 조회
 
     public TotalStampDTO getAll(UserEntity user, LocalDate date){
 
@@ -68,9 +64,6 @@ public class StampService {
 
         return totalStampDTO;
     }
-
-
-
 
 
     @Transactional
@@ -133,12 +126,56 @@ public class StampService {
     }
 
 
-    //TODO
-    //방문 인증 내용 수정
+    @Transactional
+    public Stamp updateStamp(StampDTO stampDTO, MultipartFile multipartFile) throws IOException {
+
+        Optional<Stamp> stamp=stampRepository.findById( stampDTO.getStampId() );
+        Optional<PopupStore> popupStore=popupStoreRepository.findById( stampDTO.getPopupId() );
+
+        if(stamp.isPresent() && popupStore.isPresent()){
+
+            //기존 사진 삭제
+            String bucketName = "gagopop";
+            String folderName = "user_stamp/";
+            String fileNamePre = "st";
+
+            String pictureUrl=stamp.get().getPicture();
+            String existFileName = pictureUrl.substring(pictureUrl.lastIndexOf('/') + 1);
+            String path= folderName+existFileName;
+            s3.deleteObject( bucketName, path );
 
 
-    //TODO
-    //방문 인증 내용 삭제
+            //새 파일로 업데이트
+            UUID uuid = UUID.randomUUID();
+            String[] uuids = uuid.toString().split( "-");
+            String uniqueName = uuids[0];
+
+            String fileName = fileNamePre + "-" + uniqueName;
+            String[] split = multipartFile.getOriginalFilename().split("\\.");
+            String extension = split[split.length - 1];
+
+            String newFileName = folderName +fileName+"."+extension;
+            File file = convertMultiPartToFile(multipartFile);
+
+            s3.putObject(new PutObjectRequest(bucketName, newFileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+
+            String fileUrl = s3.getUrl(bucketName, newFileName).toString();
+
+            stamp.get().setPopupStore( popupStore.get() );
+            stamp.get().setDate( stampDTO.getDate() );
+            stamp.get().setPicture( fileUrl );
+            stamp.get().setContent( stampDTO.getContent() );
+            stamp.get().setWithWho( stampDTO.getWithWho() );
+
+
+            return stamp.get();
+
+        }
+
+        return null;
+    }
+
+
     @Transactional
     public boolean deleteStamp(UserEntity user, Long popupId) throws IOException {
 
@@ -149,8 +186,6 @@ public class StampService {
             String bucketName = "gagopop";
             String folderName = "user_stamp/";
 
-            //todo
-            //s3 버킷에서 이미지 삭제
             String pictureUrl=existingUserStampList.get().getPicture();
 
             String fileName = pictureUrl.substring(pictureUrl.lastIndexOf('/') + 1);
