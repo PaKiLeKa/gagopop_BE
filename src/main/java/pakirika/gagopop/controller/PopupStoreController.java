@@ -91,7 +91,11 @@ public class PopupStoreController {
         //          -->      없으면 -> 그냥 false 넣기
         Optional<UserEntity> optionalUser=userService.findUser( request );
 
-        UserEntity userEntity = optionalUser.get();
+        UserEntity userEntity=null;
+
+        if(optionalUser.isPresent()){
+            userEntity= optionalUser.get();
+        }
 
         List<PopupStore> searchResult= popupStoreRepository.findOpenPopupStoresByNameDate( keyword, localDate );
 
