@@ -2,22 +2,20 @@ package pakirika.gagopop.config;
 
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import pakirika.gagopop.jwt.JWTFilter;
+import pakirika.gagopop.jwt.JWTUtil;
 import pakirika.gagopop.service.CustomOAuth2UserService;
 import pakirika.gagopop.oauth2.CustomSuccessHandler;
 
@@ -31,7 +29,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
 
-    //private final JWTUtil jwtUtil;
+    private final JWTUtil jwtUtil;
 /*    @Bean
     public WebSecurityCustomizer webSecurityCustomizer( ) {
         return (web) -> web.ignoring().requestMatchers("/popup/**");
@@ -70,6 +68,10 @@ public class SecurityConfig {
         //form login 방식 disable
         http
                 .formLogin((login)-> login.disable());
+                //.formLogin((f)->f
+                       // .loginPage( "/admin/login" )
+                        //.defaultSuccessUrl("/admin/dashboard"));
+
 
         //HTTP Basic 인증 방식 disable
         http
@@ -78,18 +80,20 @@ public class SecurityConfig {
 
 
         //JWTFilter 추가
-     /*   http
+       http
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);*/
+                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+
 
         //OAuth2
         http
-                .oauth2Login( (oauth2)-> oauth2
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                .oauth2Login( oauth2-> oauth2
+                        .userInfoEndpoint((userInfo) -> userInfo
                                 .userService( customOAuth2UserService ))
                         .successHandler( customSuccessHandler )
-                        .loginPage("/login"))
-                .formLogin((f)->f.disable())
+                        .loginPage("/admin/login"))
+
+                //.formLogin((f)->f.disable())
                 .logout((logout)->logout
                         .logoutUrl( "/logout" )
                         //.logoutSuccessUrl( "http://localhost:3000" )
@@ -98,20 +102,20 @@ public class SecurityConfig {
                         .permitAll()); //나중에 추가 셋팅할 것
         //.oauth2Login( Customizer.withDefaults() );
 
-        //경로별 인가 작업
         http
                 .authorizeHttpRequests( (auth) -> auth
-                        //.requestMatchers( "/", "/oauth2/**", "/login/**" ).permitAll()
-                        //.requestMatchers( "/user/**" ).authenticated()
+                        .requestMatchers( "/admin/login","/login", "/" ).permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().permitAll() );
-        //http
-        //.exceptionHandling( (ex) -> ex
-        //        .authenticationEntryPoint( new HttpStatusEntryPoint( HttpStatus.NOT_FOUND ) ) );
-        //잘못된 경로, 파라미터로 요청시 404 오류 반환하도록
+        //경로별 인가 작업
 
-
-        //.authenticationEntryPoint( (request, response, authException) //인증되지 않은경우 401 반환
-        //        -> response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"  ) ));
+      /*  http
+        .exceptionHandling( (ex) -> ex
+                .authenticationEntryPoint( new HttpStatusEntryPoint( HttpStatus.NOT_FOUND ) )
+                .authenticationEntryPoint( (request, response, authException) //인증되지 않은경우 401 반환
+                        -> response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"  ) ));
+        //잘못된 경로, 파라미터로 요청시 404 오류 반환하도록*/
 
 
         //세션 설정

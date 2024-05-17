@@ -5,7 +5,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -39,10 +38,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String token = jwtUtil.createJwt(username, role, 60*60*60*60L);
 
-
         response.addCookie(createCookie("Authorization", token));
+        if ("ROLE_ADMIN".equals(role)) {
+            System.out.println( role );
+            response.sendRedirect("/admin/dashboard");
+        } else {
+            System.out.println( "user" );
+            response.sendRedirect("/");
+        }
         //response.sendRedirect("http://localhost:3000/");
-        response.sendRedirect("/");
+        //response.sendRedirect("/");
     }
 
     private Cookie createCookie(String key, String value) {
