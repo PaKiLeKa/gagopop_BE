@@ -24,6 +24,15 @@ public class LogoutController {
 
         response.sendRedirect("/");
     }
+
+    @GetMapping("/admin/logout")
+    public String adminLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.addCookie(deleteCookie("Authorization", ""));
+
+        return "admin/login";
+    }
+
     private Cookie deleteCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
