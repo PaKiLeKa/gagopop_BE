@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link  th:href="@{/css/bootstrap.min.css}"
+           href="../../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+        .a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>팝업 스토어 상세</h2>
+    </div>
+    <div>
+        <label for="popupId">팝업 스토어 ID</label>
+        <input type="text" id="popupId" name="popupId" class="form-control" value="1" th:value="${popupStore.id}" readonly>
+    </div>
+    <div>
+        <label for="name">팝업스토어명</label>
+        <input type="text" id="name" name="name" class="form-control" value="NULL" th:value="${popupStore.name}"readonly>
+    </div>
+    <div>
+        <label for="startDate">시작일</label>
+        <input type="text" id="startDate" name="startDate" class="form-control" value="2000-01-01" th:value="${startDateNoTime}" readonly>
+    </div>
+    <div>
+        <label for="endDate">종료일</label>
+        <input type="text" id="endDate" name="endDate" class="form-control" value="2000-12-31"  th:value="${endDateNoTime}" readonly>
+    </div>
+    <div>
+        <label for="address">주소</label>
+        <input type="text" id="address" name="address" class="form-control" value="전체 주소를 입력해주세요"   th:value="${popupStore.address}" readonly>
+    </div>
+    <div>
+        <label for="operatingTime">운영 시간</label>
+        <input type="text" id="operatingTime" name="operatingTime" class="form-control" th:value="${popupStore.operatingTime}"  readonly >
+    </div>
+    <div>
+        <label for="url">공식 URL</label>
+        <input type="text" id="url" name="url" class="form-control" value="https://gagopop.kro.kr"   th:value="${popupStore.snsLink}" readonly>
+    </div>
+    <div>
+        <label for="info">기타 정보</label>
+        <input type="text" id="info" name="info" class="form-control" th:value="${popupStore.info}" readonly  >
+    </div>
+    <div>
+        <label for="img">사진</label>
+        <div id="img" class="input-group mb-3">
+            <img src="" th:src="${popupStore.imageUrl}"alt="팝업스토어 이미지" align="center" >
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px; ">
+        <div class="col">
+            <div>
+                <label for="isPromoted">홍보</label>
+                <input class="form-check-input" type="checkbox" id="isPromoted" name="isPromoted" value="true" th:checked="${popupStore.isPromoted}" disabled>
+            </div>
+        </div>
+        <div class="col">
+            <div>
+                <label for="isClosed">임시 휴업</label>
+                <input class="form-check-input" type="checkbox"  id="isClosed" name="isClosed" value="true" th:checked ="${isClosed}"  disabled>
+            </div>
+        </div>
+    </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg"
+                    onclick="location.href='editForm.html'"
+                    th:onclick="|location.href='@{/admin/popup/{popupId}/edit(popupId=${popupStore.Id})}'|"
+                    type="button">정보 수정</button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='popup-stores.html'"
+                    th:onclick="|location.href='@{/admin/popup-stores}'|"
+                    type="button">목록으로</button>
+        </div>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

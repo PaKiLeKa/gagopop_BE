@@ -12,6 +12,9 @@ public interface PopupStoreRepository extends JpaRepository<PopupStore,Long> {
 
     List<PopupStore> findByNameContaining(String name);
 
+    List<PopupStore> findAllByOrderByIdDesc();
+
+
     @Query(value="SELECT * FROM popup_store  WHERE name like %:keyword% OR address like %:keyword% AND " +
             "start_date<= :date AND end_date >= :date and is_opened is not null",
             nativeQuery=true)
