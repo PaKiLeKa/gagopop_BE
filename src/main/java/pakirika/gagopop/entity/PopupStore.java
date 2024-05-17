@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,7 +24,7 @@ public class PopupStore {
     private String name;
     private LocalDateTime StartDate;
     private LocalDateTime EndDate;
-    private String OperatingTime;
+    private String operatingTime;
     private boolean isOpened;
     private double latitude;
     private double longitude;
