@@ -115,7 +115,7 @@ public class AdminPopupStoreController {
             s3.putObject(new PutObjectRequest(bucketName, newFileName, file).withCannedAcl( CannedAccessControlList.PublicRead));
 
             fileUrl = s3.getUrl(bucketName, newFileName).toString();
-
+            file.delete();
         }
         popupStore.setImageUrl( fileUrl );
         popupStore.setSnsLink( url );

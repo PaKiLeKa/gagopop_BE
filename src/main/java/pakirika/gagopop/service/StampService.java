@@ -110,6 +110,7 @@ public class StampService {
             userStamp.setWithWho(withWho);
 
             stampRepository.save( userStamp );
+            file.delete();
             return true;
         }
         else {
@@ -167,6 +168,7 @@ public class StampService {
             stamp.get().setContent( stampDTO.getContent() );
             stamp.get().setWithWho( stampDTO.getWithWho() );
 
+            file.delete();
 
             return stamp.get();
 
