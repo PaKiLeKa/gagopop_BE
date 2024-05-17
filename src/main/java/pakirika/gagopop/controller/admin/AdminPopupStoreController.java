@@ -134,9 +134,16 @@ public class AdminPopupStoreController {
         if (optionalPopupStore.isPresent()) {
             PopupStore popupStore = optionalPopupStore.get();
 
+
+            LocalDate startDateNoTime = null;
+            LocalDate endDateNoTime = null;
             // LocalDateTime에서 LocalDate로 변환
-            LocalDate startDateNoTime = popupStore.getStartDate().toLocalDate();
-            LocalDate endDateNoTime = popupStore.getEndDate().toLocalDate();
+            if(popupStore.getStartDate() != null ){
+                startDateNoTime = popupStore.getStartDate().toLocalDate();
+            }
+            if(popupStore.getEndDate() != null ){
+                endDateNoTime = popupStore.getEndDate().toLocalDate();
+            }
 
             model.addAttribute("popupStore", popupStore);
             model.addAttribute("startDateNoTime", startDateNoTime);
@@ -156,8 +163,16 @@ public class AdminPopupStoreController {
             PopupStore popupStore = optionalPopupStore.get();
 
             // LocalDateTime에서 LocalDate로 변환
-            LocalDate startDateNoTime = popupStore.getStartDate().toLocalDate();
-            LocalDate endDateNoTime = popupStore.getEndDate().toLocalDate();
+
+            LocalDate startDateNoTime = null;
+            LocalDate endDateNoTime = null;
+            // LocalDateTime에서 LocalDate로 변환
+            if(popupStore.getStartDate() != null ){
+                startDateNoTime = popupStore.getStartDate().toLocalDate();
+            }
+            if(popupStore.getEndDate() != null ){
+                endDateNoTime = popupStore.getEndDate().toLocalDate();
+            }
 
             model.addAttribute("popupStore", popupStore);
             model.addAttribute("startDateNoTime", startDateNoTime);
