@@ -2,153 +2,158 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <link  th:href="@{/css/bootstrap.min.css}"
-           href="../../css/bootstrap.min.css" rel="stylesheet">    <style>
-     .container {
-     max-width: 560px;
-            }
-     label{
-        padding: 5px 0px 5px 0px;
-     }
-
-     .inputBox{
-     padding: 5px 0px 15px 0px;
-     }
-
-
-    </style>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" href="../../static/css/sidebar.css" />
+    <link rel="stylesheet" th:href="@{/css/body.css}" href="../../static/css/body.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
-<div class="container">
-    <div class="py-5 text-center">
-        <h2>팝업 스토어 수정 폼</h2>
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="body-content">
+    <div th:replace="fragments/top-bar-content :: top-bar-content"></div>
+    <div class="title">
+        <h2 >팝업 스토어 수정 폼</h2>
     </div>
-    <form id="popupForm" action="popup-store.html" th:action method="post" onsubmit="return false;" enctype="multipart/form-data">
-    <div>
-            <label for="popupId">팝업스토어 ID</label>
-            <input type="text" id="popupId" name="popupId" class="form-control" value="1"  th:value="${popupStore.id}" readonly>
-        </div>
-        <div>
-            <label for="name">팝업스토어명</label>
-            <input type="text" id="name" name="name" class="form-control" value="NULL" th:value="${popupStore.name}">
-        </div>
-        <div>
-            <label for="startDate">시작일</label>
-            <input type="text" id="startDate" name="startDate" class="form-control"  value="2000-01-01"  th:value="${startDateNoTime}" >
-        </div>
-        <div>
-            <label for="endDate">종료일</label>
-            <input type="text" id="endDate" name="endDate" class="form-control" value="2000-12-31"  th:value="${endDateNoTime}" >
-        </div>
-        <div class="row">
-            <label for="address" class="col-12 col-md-auto">주소</label>
-            <div class="col-12 col-md">
-                <div class="input-group">
-                    <input type="text" id="address" name="address" class="form-control" placeholder="전체 주소를 입력해주세요">
-                    <div class="input-group-append " style="margin-left: 6px;">
-                        <button type="button" id="validateAddressBtn" class="btn btn-primary btn-valid">검증</button>
-                        <button type="button" id="editAddressBtn" class="btn btn-secondary btn-edit" style="display: none;">수정</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container">
+    <div class="container-form">
 
-        <!--        <div class="address_wrap">
-                    <div class="address_name "> 주소</div>
-                    <div class="row">
-                        <div class="col">
-                            <input type="text" class="form-control" id="postcode" name="postcode" readonly>
-                        </div>
-                        <div class="col">
-                            <button onclick="execution_daum_address()" class="w-100 btn btn-primary btn-lg"> 주소 찾기</button>
-                        </div>
-                        <div class="clearFix"></div>
-                    </div>
-                        <div class="address_input_2_box">
-                            <input type="text" class="form-control" id="address" name="address" readonly>
-                        </div>
-                        <div class="address_input_3_box">
-                            <input type="text" class="form-control" id="detailAddress" name="detailAddress" readonly>
-                        </div>
-                </div>-->
-
-
-        <div>
-            <label for="operatingTime">운영 시간</label>
-            <input type="text" id="operatingTime" name="operatingTime" class="form-control" th:value="${popupStore.operatingTime}"   >
-        </div>
-        <div>
-            <label for="url">공식 URL</label>
-            <input type="text" id="url" name="url" class="form-control" value="https://gagopop.kro.kr"   th:value="${popupStore.snsLink}" >
-        </div>
-        <div>
-            <label for="info">기타 정보</label>
-            <input type="text" id="info" name="info" class="form-control" th:value="${popupStore.info}"   >
-        </div>
-        <div>
-            <label for="img"> 현재 이미지 </label>
-            <div class="input-group mb-3" style="overflow: hidden;">
-                <img src="" th:src="${popupStore.imageUrl}"alt="팝업스토어 이미지">
-            </div>
-            <label for="img"> 다른 이미지로 변경</label>
+        <form id="popupForm" action="popup-store.html" th:action method="post" onsubmit="return false;" enctype="multipart/form-data">
             <div>
-                <input type="file"  name="img" class="form-control" id="img" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+                <label for="id">팝업스토어 ID</label>
+                <input type="text" id="id" name="id" class="form-control"   th:value="${popupStore.id}" readonly>
             </div>
-        </div>
+            <div>
+                <label for="name">팝업스토어명</label>
+                <input type="text" id="name" name="name" class="form-control" value="NULL" th:value="${popupStore.name}">
+            </div>
+            <div class="form-date">
 
-        <div class="row" style="margin-top: 10px; ">
-            <div class="col">
                 <div>
-                    <label for="isPromoted">홍보</label>
-                    <input class="form-check-input" type="checkbox" id="isPromoted" name="isPromoted" value="true" th:checked="${popupStore.isPromoted}" >
+                    <label for="startDate">시작일</label>
+                    <input type="text" id="startDate" name="startDateDisplay" class="form-control"  value="2000-01-01"  th:value="${startDateNoTime}" >
+                </div>
+                <div class="continue">
+                    ~
+                </div>
+                <div>
+                    <label for="endDate">종료일</label>
+                    <input type="text" id="endDate" name="endDateDisplay" class="form-control" value="2000-12-31"  th:value="${endDateNoTime}" >
                 </div>
             </div>
-            <div class="col">
-                <div>
-                    <label for="isClosed">임시 휴업</label>
-                    <input class="form-check-input" type="checkbox"  id="isClosed" name="isClosed" value="true" th:checked ="${isClosed}" >
+            <!-- Hidden inputs for adjusted dates -->
+            <input type="hidden" id="adjustedStartDate" name="startDate">
+            <input type="hidden" id="adjustedEndDate" name="endDate">
+
+            <div class="container-address">
+                <label for="address" class="address-label">주소</label>
+                <div class="input-group">
+                    <input type="text" id="address" name="address" class="form-control" placeholder="전체 주소를 입력해주세요" th:value="${popupStore.address}" readonly>
+                    <div class="input-group-append">
+                        <button type="button" id="validateAddressBtn" class="btn btn-primary btn-valid" style="display: none;">검증</button>
+                        <button type="button" id="editAddressBtn" class="btn btn-secondary btn-edit" >수정</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--        <div class="address_wrap">
+                        <div class="address_name "> 주소</div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="form-control" id="postcode" name="postcode" readonly>
+                            </div>
+                            <div class="col">
+                                <button onclick="execution_daum_address()" class="w-100 btn btn-primary btn-lg"> 주소 찾기</button>
+                            </div>
+                            <div class="clearFix"></div>
+                        </div>
+                            <div class="address_input_2_box">
+                                <input type="text" class="form-control" id="address" name="address" readonly>
+                            </div>
+                            <div class="address_input_3_box">
+                                <input type="text" class="form-control" id="detailAddress" name="detailAddress" readonly>
+                            </div>
+                    </div>-->
+
+
+            <div>
+                <label for="operatingTime">운영 시간</label>
+                <input type="text" id="operatingTime" name="operatingTime" class="form-control" th:value="${popupStore.operatingTime}"   >
+            </div>
+            <div>
+                <label for="snsLink">공식 URL</label>
+                <input type="text" id="snsLink" name="snsLink" class="form-control" value="https://gagopop.kro.kr"   th:value="${popupStore.snsLink}" >
+            </div>
+            <div>
+                <label for="info">기타 정보</label>
+                <input type="text" id="info" name="info" class="form-control" th:value="${popupStore.info}"   >
+            </div>
+            <div>
+                <label for="img"> 다른 이미지로 변경</label>
+                <div class="input-file">
+                    <input type="file"  name="img" class="form-control" id="img" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
                 </div>
             </div>
-        </div>
-        <hr class="my-4">
-        <div class="row">
-            <div class="col">
-                <button id="send" class="w-100 btn btn-primary btn-lg" >저장</button>
+
+            <div class="row" style="margin-top: 10px; ">
+                <div class="col">
+                    <div class="input-check">
+                        <label for="isPromoted">홍보</label>
+                        <input class="form-check-input" type="checkbox" id="isPromoted" name="isPromoted" value="true" th:checked="${popupStore.isPromoted}" >
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-check">
+                        <label for="isClosed">임시 휴업</label>
+                        <input class="form-check-input" type="checkbox"  id="isClosed" name="isClosed" value="true" th:checked ="${isClosed}" >
+                    </div>
+                </div>
             </div>
-            <div class="col">
-                <button class="w-100 btn btn-secondary btn-lg"
-                        onclick="location.href='popup-stores.html'"
-                        th:onclick="|location.href='@{/admin/popup/{popupId}(popupId=${popupStore.id})}'|"
-                        type="button">취소</button>            </div>
-        </div>
-    </form>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col">
+                    <button id="send" class="w-100 btn btn-primary btn-lg" >저장</button>
+                </div>
+                <div class="col">
+                    <button class="w-100 btn btn-secondary btn-lg"
+                            onclick="location.href='popup-stores.html'"
+                            th:onclick="|location.href='@{/admin/popup/{popupId}(popupId=${popupStore.id})}'|"
+                            type="button">취소</button>            </div>
+            </div>
+        </form>
+    </div>
+    <div class="container-img">
+        <label> 현재 이미지 </label>
+            <img class=" popup-img" src="https://kr.object.ncloudstorage.com/gagopop/popup_img/95.jpg" th:src="${popupStore.imageUrl}"alt="팝업스토어 이미지">
+    
+    </div>
+</div>
 </div>
 </body>
 <!--
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 -->
 <script>
-         document.getElementById("validateAddressBtn").addEventListener("click", function () {
-    var addressInput = document.getElementById('address');
-    var address = addressInput.value.trim();
+document.getElementById("validateAddressBtn").addEventListener("click", function () {
+        var addressInput = document.getElementById('address');
+        var address = addressInput.value.trim();
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/validate-address", true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var response = JSON.parse(xhr.responseText);
-            if (response.valid) {
-                addressInput.readOnly = true;
-                document.getElementById("editAddressBtn").style.display = 'inline';
-                document.getElementById("validateAddressBtn").style.display = 'none';
-                alert('주소가 정상적으로 검증되었습니다.');
-            } else {
-                alert('주소가 잘못되었습니다. 다시 확인해주세요.');
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/validate-address", true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.valid) {
+                    addressInput.readOnly = true;
+                    document.getElementById("editAddressBtn").style.display = 'inline';
+                    document.getElementById("validateAddressBtn").style.display = 'none';
+                    alert('주소가 정상적으로 검증되었습니다.');
+                } else {
+                    alert('주소가 잘못되었습니다. 다시 확인해주세요.');
+                }
             }
-        }
-    };
-         xhr.send(JSON.stringify({ address: address }));
+        };
+        xhr.send(JSON.stringify({ address: address }));
     });
 
     document.getElementById("editAddressBtn").addEventListener("click", function () {
@@ -158,34 +163,62 @@
         document.getElementById("validateAddressBtn").style.display = 'inline';
     });
 
-    document.getElementById("send").addEventListener("click", function (event) {
-        event.preventDefault();
-        var form = document.getElementById('popupForm');
-        var addressInput = document.getElementById('address');
+document.getElementById("send").addEventListener("click", function (event) {
+    event.preventDefault();
+    var form = document.getElementById('popupForm');
+    var addressInput = document.getElementById('address');
 
-        // Validate start date format
-        var startDateInput = document.getElementById('startDate');
-        var endDateInput = document.getElementById('endDate');
-        if (!isValidDateFormat(startDateInput.value)) {
-            alert('시작일의 형식이 올바르지 않습니다. yyyy-MM-dd 형식으로 입력해주세요.');
-            return;
-        }
-        if (!isValidDateFormat(endDateInput.value)) {
-            alert('종료일의 형식이 올바르지 않습니다. yyyy-MM-dd 형식으로 입력해주세요.');
-            return;
-        }
+    // Validate start date format
+    var startDateInput = document.getElementById('startDate');
+    var endDateInput = document.getElementById('endDate');
+    if (!isValidDateFormat(startDateInput.value)) {
+        alert('시작일의 형식이 올바르지 않습니다. yyyy-MM-dd 형식으로 입력해주세요.');
+        return;
+    }
+    if (!isValidDateFormat(endDateInput.value)) {
+        alert('종료일의 형식이 올바르지 않습니다. yyyy-MM-dd 형식으로 입력해주세요.');
+        return;
+    }
 
-        if (addressInput.readOnly) {
-            form.submit();
-        } else {
-            alert('주소를 검증해주세요.');
-        }
-    });
+    if (addressInput.readOnly) {
+        adjustDateTimes(); // Adjust the date times and submit the form
+    } else {
+        alert('주소를 검증해주세요.');
+    }
+});
+
 
     function isValidDateFormat(dateString) {
         var dateFormat = /^\d{4}-\d{2}-\d{2}$/;
         return dateFormat.test(dateString);
     }
+
+    function adjustDateTimes() {
+    var startDateInput = document.getElementById('startDate');
+    var endDateInput = document.getElementById('endDate');
+    var adjustedStartDateInput = document.getElementById('adjustedStartDate');
+    var adjustedEndDateInput = document.getElementById('adjustedEndDate');
+
+    var startDate = new Date(startDateInput.value);
+    var endDate = new Date(endDateInput.value);
+
+    // Set startDate to the start of the day
+    startDate.setHours(0, 0, 0, 0);
+
+    // Set endDate to the end of the day
+    endDate.setHours(23, 59, 59, 999);
+
+    // Format the dates back to yyyy-MM-dd'T'HH:mm:ss for LocalDateTime
+    var startDateTime = startDate.toISOString().slice(0, 19);
+    var endDateTime = endDate.toISOString().slice(0, 19);
+
+    // Set the hidden input values
+    adjustedStartDateInput.value = startDateTime;
+    adjustedEndDateInput.value = endDateTime;
+
+    // Submit the form
+    document.getElementById('popupForm').submit();
+}
 
 
     /* 다음 주소 연동 */

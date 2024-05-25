@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+ .container {
+ max-width: 560px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>상품 상세</h2>
+    </div>
+    <div>
+        <label for="popupId">팝업 스토어 ID</label>
+        <input type="text" id="popupId" name="popupId" class="form-control" value="1" readonly>
+    </div>
+    <div>
+        <label for="name">팝업스토어명</label>
+        <input type="text" id="name" name="name" class="form-control" value="NULL" readonly>
+    </div>
+    <div>
+        <label for="startDate">시작일</label>
+        <input type="text" id="startDate" name="startDate" class="form-control" value="2000-01-01" readonly>
+    </div>
+    <div>
+        <label for="endDate">종료일</label>
+        <input type="text" id="endDate" name="endDate" class="form-control" value="2000-12-31" readonly>
+    </div>
+    <div>
+        <label for="address">주소</label>
+        <input type="text" id="address" name="address" class="form-control" value="전체 주소를 입력해주세요" readonly>
+    </div>
+    <div>
+        <label for="url">공식 URL</label>
+        <input type="text" id="url" name="url" class="form-control" value="https://gagopop.kro.kr" readonly>
+    </div>
+    <div>
+        <label for="img">사진...</label>
+        <input type="text" id="img" name="img" class="form-control" value="https://gagopop.kro.kr" readonly>
+    </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" onclick="location.href='editForm.html'" type="button">정보 수정</button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='items.html'" type="button">목록으로</button>
+        </div>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

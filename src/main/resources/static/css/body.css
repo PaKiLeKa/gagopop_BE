@@ -1,0 +1,413 @@
+.content-right{
+    display: flex;
+    flex-direction: row;
+}
+
+.body-content{
+    width: 100%;
+    margin-left: 200px;
+}
+
+h2 {
+    margin: 3px;
+}
+
+
+table {
+  border: 1px #2D384A solid;
+  font-size: .9em;
+/*
+  box-shadow: 0 2px 5px rgba(0,0,0,.25);
+*/
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 5px 10px;
+}
+
+th {
+  text-align: left;
+
+}
+
+thead {
+  font-weight: bold;
+  color: #fff;
+  background: #2D384A;
+  font-size: 13px;
+}
+
+td, th {
+  padding: 1em .5em;
+  vertical-align: middle;
+}
+
+td {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  background: #fff;
+  max-width: 200px;
+  font-size: 13px;
+}
+
+table a {
+  color: #3D485A;
+  max-width: 100px;
+  text-decoration: none;
+}
+
+.container-login{
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  height: 600px;
+  background-color: #f2f2f2;
+}
+
+.login{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 50px;
+  margin-top: 100px;
+}
+
+.btn-lg{
+  padding-left: 20px;
+}
+
+.container{
+    padding: 0px 20px ;
+    display: flex;
+
+}
+.container-popupstores{
+  padding: 10px 20px ;
+  display: flex;
+  flex-direction: column;
+  background-color: #f2f2f2
+}
+
+.container-btn-list{
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 10px;
+}
+
+/* 
+input {
+  width: 500px;
+  height: 32px;
+  font-size: 15px;
+  border-color: #cccccc;
+  border-radius: 5px;
+  border-style: solid;
+  margin: 3px 0px;
+  background-color: #fcfcfc;
+  padding: 5px 10px;
+}
+
+input:hover{
+  border-color: #355993;
+}
+
+.btn{
+  border-radius: 5px;
+  background-color: #0172ad;
+  color:#fff;
+  border: 0px;
+  height: 32px;
+  padding: auto;
+}
+
+.btn:hover{
+
+  background-color: #004367;
+  color:#fff;
+
+}
+
+.input-group{
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  justify-content: left;
+}
+
+.input-group ::-webkit-file-upload-button{
+  background-color: #dbdbdb;
+  margin: 0px;
+  padding: 5px;
+  border-radius: 5%;
+  border-color: #ffffff00;
+  
+} */
+
+/* General form styles */
+
+.title{
+  margin-left: 20px;
+}
+
+.container{
+  background-color: #f0f0f0;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  height: fit-content;
+}
+
+.container-img{
+  background-color: #fff;
+  margin-left: 10px;
+  padding: 10px;
+  height: fit-content;
+  width: 300px;
+}
+
+.popup-img{
+  object-fit: cover;  
+  width: 300px;
+}
+
+.container-form{
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  justify-content: center;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.address-label{
+  display: block ;
+  
+}
+
+input.form-control{
+  padding: 11px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-group{
+  display: flex;
+}
+
+.input-group-append{
+  margin-left: 10px;
+
+}
+
+.container-address{
+  flex-direction: column;
+}
+.form-control.input-address{
+  margin-right: 0px;
+}
+
+
+.popupForm{
+  width: 100%;
+}
+
+.form-date{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.form-control.input-date{
+  width: 300px;
+}
+
+
+
+.continue{
+  text-align: center;
+  font-size: 20px;
+  padding: 10px;
+}
+
+/*.url{
+    display: flex;
+    align-items: center;
+    width: 100%
+    height: fit-content;
+}*/
+
+input[type=file]::file-selector-button{
+  display: inline-block;
+  padding: 8px 15px;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px; /* 둥근 모서리 */
+  cursor: pointer;
+  background-color: #808080; /* 파란색 버튼 */
+  transition: background-color 0.3s ease;
+  color: white;
+  border: none; /* 보더 없음 */
+
+}
+input[type=file]::file-selector-button:hover {
+  background-color: #5c5c5c;
+  color: #fff;
+}
+input[type=file] {
+  padding: 5px 0px 5px 5px;
+}
+
+input[readonly] {
+    background-color: #f5f5f5;
+}
+
+/* Button styles */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px; /* 둥근 모서리 */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #007bff; /* 파란색 버튼 */
+  color: white;
+  border: none; /* 보더 없음 */
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-valid{
+  width: 80px;
+}
+
+
+.btn-secondary {
+  background-color: #6c757d; /* 회색 버튼 */
+  color: white;
+  border: none; /* 보더 없음 */
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+
+/* Checkbox styles */
+.form-check-input {
+  margin-left: 16px;
+  
+}
+
+/* Row styles */
+.row {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+}
+
+.col{
+  width: 300px;
+}
+
+.btn-lg{
+  padding: 15px 100px;
+
+}
+
+.popupForm div{
+  display: block;
+}
+
+hr ,.my-4{
+  margin: 20px 0px;
+  color: #2d384a7b;
+  
+}
+
+.input-check{
+  display: flex;
+  margin-top: 10px;
+}
+
+.container-address{
+  display: flex;
+}
+
+.chk_box {
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  margin: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* 기본 체크박스 숨기기 */
+.chk_box input[type="checkbox"] {
+  display: none;
+}
+
+/* 선택되지 않은 체크박스 스타일 꾸미기 */
+.on {
+  width: 20px;
+  height: 20px;
+  background: #ddd;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* 선택된 체크박스 스타일 꾸미기 */
+.chk_box input[type="checkbox"]:checked+.on {
+  background: #007bff;
+}
+
+.on:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.chk_box input[type="checkbox"]:checked+.on:after {
+  display: block;
+}
+
+.on:after {
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  position: absolute;
+  left: 6px;
+  top: 2px;
+}
+
+

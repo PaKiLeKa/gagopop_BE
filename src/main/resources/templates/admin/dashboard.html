@@ -1,27 +1,19 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <link href="../css/bootstrap.min.css" rel="stylesheet">
-  <style>
- .container {
- max-width: 560px;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" href="../css/sidebar.css" />
+    <link rel="stylesheet" th:href="@{/css/body.css}" href="../css/body.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
-<div class="container">
-  <div class="py-5 text-center">
-    <h2> 대시보드</h2>
-  </div>
-  <hr class="my-4">
-   <p> ...공사중...</p>
-    <div class="col">
-      <button class="w-100 btn btn-primary btn-lg" onclick="location.href='popup-stores'" type="button">팝업스토어 관리</button>
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <div class="body-content">
+        <div th:replace="fragments/top-bar-content :: top-bar-content"></div>
+        <div>...공사중...</div>
     </div>
-    <div class="col my-4">
-        <button class="w-100 btn btn-primary btn-lg" onclick="location.href='https://gagopop.vercel.app'" type="button">가고팝으로 돌아가기</button>
-    </div>
-</div> <!-- /container -->
+
 </body>
 </html>

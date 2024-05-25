@@ -1,26 +1,28 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <link href="../css/bootstrap.min.css" rel="stylesheet">
-  <style>
- .container {
- max-width: 560px;
-        }
-    </style>
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}" href="../../static/css/sidebar.css" />
+  <link rel="stylesheet" th:href="@{/css/body.css}" href="../../static/css/body.css" />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
 </head>
-<body>
-<div class="container">
-  <div class="py-5 text-center">
-    <h2> 관리자 로그인</h2>
-  </div>
-  <hr class="my-4">
+<body class="container-login">
+  <div class="login">
+    <div class="logo">
+      <img src="https://kr.object.ncloudstorage.com/gagopop/%EB%A1%9C%EA%B3%A0.png" alt="gagopop Logo">
+      <span>for Admin</span>
+    </div>
+    <div>
+      <hr class="my-4">
+    </div>
     <div class="col">
       <button class="w-100 btn btn-primary btn-lg" onclick="location.href='/oauth2/authorization/google'" type="button">관리자 구글 로그인</button>
     </div>
-  <div class="col my-4">
-    <button class="w-100 btn btn-primary btn-lg" onclick="location.href='https://gagopop.vercel.app'" type="button">가고팝으로 돌아가기</button>
-  </div>
-</div> <!-- /container -->
+    <div class="col my-4">
+      <button class="w-100 btn btn-primary btn-lg" onclick="location.href='https://gagopop.vercel.app'" type="button">가고팝으로 돌아가기</button>
+    </div>
+  </div> <!-- /container -->
 </body>
 </html>

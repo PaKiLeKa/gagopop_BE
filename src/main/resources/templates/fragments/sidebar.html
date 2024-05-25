@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Fragment</title>
+</head>
+<body>
+<div th:fragment="sidebar">
+    <div class="sidebar">
+        <div class="logo">
+            <img src="https://kr.object.ncloudstorage.com/gagopop/%EB%A1%9C%EA%B3%A0.png" alt="gagopop Logo">
+            <span>for Admin</span>
+        </div>
+        <ul class="menu">
+            <li><a href="/admin/dashboard" class="btn-hover"><span class="material-symbols-outlined">home</span>Dashboard</a></li>
+            <li><a href="/admin/popup-stores" class="btn-hover"><span class="material-symbols-outlined">storefront</span>Popup Stores</a></li>
+            <li><a href="/admin/inquires" class="btn-hover"><span class="material-symbols-outlined">help</span>Inquires</a></li>
+        </ul>
+        <div class="back-to-main">
+            <a class="btn-hover" href="https://gagopop.vercel.app"><span class="material-symbols-outlined">arrow_back</span>Back to Gagopop</a>
+        </div>
+        <div class="copyright">
+            <p>Copyright © PAKILEKA. All Rights Reserved.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

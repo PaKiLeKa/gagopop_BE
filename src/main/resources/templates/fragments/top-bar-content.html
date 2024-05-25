@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Fragment</title>
+</head>
+<body>
+    <div th:fragment="top-bar-content" class="content">
+        <div class="top-bar">
+            <a href="/admin/logout" class="logout btn-hover"><span class="material-symbols-outlined">logout</span>Logout
+            </a>
+        </div>
+    </div>
+</body>
+</html>
