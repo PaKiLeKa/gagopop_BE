@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import pakirika.gagopop.dto.PopupWishDTO;
 import pakirika.gagopop.dto.WishTogoDTO;
 import pakirika.gagopop.entity.*;
-import pakirika.gagopop.repository.TogoListPopupStoreRepository;
+import pakirika.gagopop.repository.TogoListRepository;
 import pakirika.gagopop.repository.UserRepository;
 import pakirika.gagopop.repository.WishlistRepository;
 
@@ -20,7 +20,7 @@ public class WishlistService {
     private final UserRepository userRepository;
 
     private final WishlistRepository wishlistRepository;
-    private final TogoListPopupStoreRepository togoListPopupStoreRepository;
+    private final TogoListRepository togoListRepository;
 
 
     public boolean addToWishlist(UserEntity userEntity, PopupStore popupStore) {
@@ -61,7 +61,7 @@ public class WishlistService {
         return wishlists.stream()
                 .map(wishlist -> {
                     PopupStore popupStore = wishlist.getPopupStore();
-                    boolean isInTogoList = isPopupStoreInTogoList(popupStore);
+                    boolean isInTogoList = isPopupStoreInUsersTogoList(user,popupStore);
                     WishTogoDTO wishTogoDTO = new WishTogoDTO();
                     wishTogoDTO.setInTogo(isInTogoList);
                     wishTogoDTO.setPopupStore(popupStore);
@@ -98,8 +98,8 @@ public class WishlistService {
         return !wishlistPopupStores.isEmpty();
     }
 
-    private boolean isPopupStoreInTogoList(PopupStore popupStore) {
-        List<TogoListPopupStore> togoListPopupStores = togoListPopupStoreRepository.findByPopupStore(popupStore);
+    private boolean isPopupStoreInUsersTogoList(UserEntity userEntity, PopupStore popupStore) {
+        List<TogoList> togoListPopupStores = togoListRepository.findByUserEntityAndPopupStore(userEntity, popupStore);
         return !togoListPopupStores.isEmpty();
     }
 
@@ -110,7 +110,6 @@ public class WishlistService {
         if(userWishlist.isPresent()){
             wishlistRepository.delete(userWishlist.get());
         }
-
     }
 
 }

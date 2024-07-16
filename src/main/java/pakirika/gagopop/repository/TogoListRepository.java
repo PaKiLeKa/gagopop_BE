@@ -6,6 +6,7 @@ import pakirika.gagopop.entity.TogoList;
 import pakirika.gagopop.entity.UserEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TogoListRepository extends JpaRepository<TogoList, Long> {
 
@@ -13,4 +14,7 @@ public interface TogoListRepository extends JpaRepository<TogoList, Long> {
 
     Long countByUserEntity(UserEntity userEntity );
 
+    List<TogoList> findByUserEntityAndPopupStore(UserEntity userEntity, PopupStore popupStore);
+
+    Optional<TogoList> findByIdAndUserEntity(Long id, UserEntity userEntity);
 }
