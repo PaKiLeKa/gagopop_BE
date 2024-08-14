@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -19,10 +22,32 @@ public class TogoList {
     @JoinColumn(name="user_id", referencedColumnName="id")
     private UserEntity userEntity;
 
+    @ManyToMany
+    @JoinTable(
+            name = "togo_popup_store",
+            joinColumns = @JoinColumn(name = "togo_list_id"),
+            inverseJoinColumns = @JoinColumn(name = "popup_store_id")
+    )
+    private Set<PopupStore> popupStores = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name="popup_id", referencedColumnName="id")
-    private PopupStore popupStore;
+    // Method to add a PopupStore ensuring no duplicates and max 5 stores
+    public boolean addPopupStore(PopupStore popupStore) {
+        if (popupStores.size() < 5) {
+            return popupStores.add(popupStore);
+        }
+        return false;
+    }
+
+    // Method to remove a PopupStore
+    public boolean removePopupStore(PopupStore popupStore) {
+        return popupStores.remove(popupStore);
+    }
+
+
+
+//    @ManyToOne
+//    @JoinColumn(name="popup_id", referencedColumnName="id")
+//    private PopupStore popupStore;
 //
 //    @ManyToOne
 //    @JoinColumn(name="popup_id", referencedColumnName="id")

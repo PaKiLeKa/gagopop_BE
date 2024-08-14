@@ -14,7 +14,7 @@ public interface TogoListRepository extends JpaRepository<TogoList, Long> {
 
     Long countByUserEntity(UserEntity userEntity );
 
-    List<TogoList> findByUserEntityAndPopupStore(UserEntity userEntity, PopupStore popupStore);
+    //List<TogoList> findByUserEntityAndPopupStore(UserEntity userEntity, PopupStore popupStore);
 
     Optional<TogoList> findByIdAndUserEntity(Long id, UserEntity userEntity);
 }
