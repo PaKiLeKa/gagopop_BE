@@ -139,8 +139,8 @@ public class TogoListController {
     //팝업 추가
     @PostMapping("/togo/popup/add")
     public ResponseEntity addPopupToTogoList(HttpServletRequest request,
-                                  @RequestParam("TogoId") Long togoId,
-                                  @RequestParam("popupId") Long pid ){
+                                             @RequestParam("tid") Long togoId,
+                                             @RequestParam("pid") Long pid ){
 
         Optional<UserEntity> optionalUser = userService.findUser( request );
 
@@ -169,8 +169,8 @@ public class TogoListController {
 
     @PostMapping("/togo/popup/add-test")
     public ResponseEntity addPopupToTogoListTest(HttpServletRequest request,
-                                            @RequestParam("TogoId") Long togoId,
-                                            @RequestParam("popupId") Long pid ){
+                                            @RequestParam("tid") Long togoId,
+                                            @RequestParam("pid") Long pid ){
 
 
         UserEntity testUser=userRepository.getById( testUserID );
