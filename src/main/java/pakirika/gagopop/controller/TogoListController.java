@@ -40,7 +40,7 @@ public class TogoListController {
 
         TogoList togoList=togoListService.createTogoList( testUser, togoName );
 
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok("Togo list is created successfully");
 
     }
     @PostMapping("/togo/create")
@@ -59,7 +59,7 @@ public class TogoListController {
     }
 
     //투고 id로 개별 조회
-    @GetMapping("/togo")
+    @GetMapping("/togo/show")
     public ResponseEntity showTogoList(HttpServletRequest request, @RequestParam("tid") Long togoId){
         Optional<UserEntity> optionalUser = userService.findUser( request );
 
@@ -76,8 +76,20 @@ public class TogoListController {
         return ResponseEntity.ok(optionalTogoList.get());
     }
 
-    //User의 전체 togo 조회
+    @GetMapping("/togo/show-test")
+    public ResponseEntity showTogoListTest(HttpServletRequest request, @RequestParam("tid") Long togoId){
+        UserEntity testUser=userRepository.getById( testUserID );
 
+        Optional<TogoList> optionalTogoList=togoListService.getTogoList( testUser, togoId );
+
+        if(optionalTogoList.isEmpty()){
+            return ResponseEntity.status( HttpStatus.NOT_FOUND ).body("Togo list not found");
+        }
+
+        return ResponseEntity.ok(optionalTogoList.get());
+    }
+
+    //User의 전체 togo 조회
     @GetMapping("/togo/all")
     public ResponseEntity showTogoListAll(HttpServletRequest request){
         Optional<UserEntity> optionalUser = userService.findUser( request );
@@ -87,6 +99,15 @@ public class TogoListController {
         }
 
         List<TogoList> optionalTogoList=togoListService.getAllTogoLists( optionalUser.get() );
+
+        return ResponseEntity.ok(optionalTogoList.stream().toList());
+    }
+
+    @GetMapping("/togo/all-test")
+    public ResponseEntity showTogoListAllTest(HttpServletRequest request){
+        UserEntity testUser=userRepository.getById( testUserID );
+
+        List<TogoList> optionalTogoList=togoListService.getAllTogoLists( testUser);
 
         return ResponseEntity.ok(optionalTogoList.stream().toList());
     }
@@ -185,7 +206,6 @@ public class TogoListController {
                                                     @RequestParam("TogoId") Long togoId,
                                                     @RequestParam("popupId") Long pid ){
 
-
         UserEntity testUser=userRepository.getById( testUserID );
 
         Optional<PopupStore> optionalPopupStore=popupStoreService.getPopupStore( pid );
@@ -222,6 +242,21 @@ public class TogoListController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Togo List not found");
         }
         togoListService.deleteTogoList(optionalUser.get(), optionalTogoList.get());
+        return ResponseEntity.ok("Delete Togo list successfully");
+    }
+
+    @GetMapping("/togo/delete-test")
+    public ResponseEntity<String> deleteToGoListTest(HttpServletRequest request,
+                                                 @RequestParam("id") Long togoId) {
+        UserEntity testUser=userRepository.getById( testUserID );
+
+        // popupStoreId를 이용하여 PopupStore 정보 가져오기
+        // WishlistPopupStore에 데이터 추가
+        Optional<TogoList> optionalTogoList = togoListService.getTogoList( testUser, togoId );
+        if (optionalTogoList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Togo List not found");
+        }
+        togoListService.deleteTogoList(testUser, optionalTogoList.get());
         return ResponseEntity.ok("Delete Togo list successfully");
     }
 }
