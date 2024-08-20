@@ -193,7 +193,7 @@ public class TogoListController {
     }
 
 
-    @PostMapping("/togo/popup/remove-test")
+    @PostMapping("/togo/popup/remove")
     public ResponseEntity removePopupToTogoListTest(HttpServletRequest request,
                                                 @RequestParam("tid") Long togoId,
                                                 @RequestParam("pid") Long pid ){
@@ -223,7 +223,7 @@ public class TogoListController {
 
     }
 
-    @PostMapping("/togo/popup/remove")
+    @PostMapping("/togo/popup/remove-test")
     public ResponseEntity removePopupToTogoList(HttpServletRequest request,
                                                 @RequestParam("tid") Long togoId,
                                                 @RequestParam("pid") Long pid ){
