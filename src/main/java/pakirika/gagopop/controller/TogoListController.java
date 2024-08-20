@@ -236,7 +236,6 @@ public class TogoListController {
             return ResponseEntity.status( HttpStatus.NOT_FOUND ).body( "Popup Store Not Found" );
         }
 
-        //boolean b = togoListService.addPopupStore( togoId, optionalUser.get(), optionalPopupStore.get() );
         boolean b = togoListService.removePopupStore( togoId, testUser, optionalPopupStore.get() );
 
         if(!b){
@@ -257,13 +256,16 @@ public class TogoListController {
             return ResponseEntity.status( HttpStatus.UNAUTHORIZED).body("User not found"); //유저를 찾을 수 없는 경우
         }
 
-        // popupStoreId를 이용하여 PopupStore 정보 가져오기
-        // WishlistPopupStore에 데이터 추가
         Optional<TogoList> optionalTogoList = togoListService.getTogoList( optionalUser.get(), togoId );
         if (optionalTogoList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Togo List not found");
         }
-        togoListService.deleteTogoList(optionalUser.get(), optionalTogoList.get());
+        boolean b =togoListService.deleteTogoList( optionalUser.get(), optionalTogoList.get() );
+
+        if(!b){
+            return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( "Failed to delete Togo List" );
+        }
+
         return ResponseEntity.ok("Delete Togo list successfully");
     }
 
@@ -272,13 +274,16 @@ public class TogoListController {
                                                  @RequestParam("id") Long togoId) {
         UserEntity testUser=userRepository.getById( testUserID );
 
-        // popupStoreId를 이용하여 PopupStore 정보 가져오기
-        // WishlistPopupStore에 데이터 추가
         Optional<TogoList> optionalTogoList = togoListService.getTogoList( testUser, togoId );
         if (optionalTogoList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Togo List not found");
         }
-        togoListService.deleteTogoList(testUser, optionalTogoList.get());
+        boolean b =togoListService.deleteTogoList( testUser, optionalTogoList.get() );
+
+        if(!b){
+            return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( "Failed to delete Togo List" );
+        }
+
         return ResponseEntity.ok("Delete Togo list successfully");
     }
 }
