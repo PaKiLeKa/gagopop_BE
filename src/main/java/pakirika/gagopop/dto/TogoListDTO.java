@@ -13,13 +13,11 @@ public class TogoListDTO {
 
     private Long id;
     private String name;
-    private Long userId;
     private Set<Long> popupStoreIds;
 
     public TogoListDTO(TogoList togoList, Set<Long> popupStoreIds) {
         this.id = togoList.getId();
         this.name = togoList.getName();
-        this.userId = togoList.getUserEntity().getId();
         this.popupStoreIds = popupStoreIds;
     }
 
