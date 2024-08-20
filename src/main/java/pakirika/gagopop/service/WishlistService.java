@@ -61,7 +61,9 @@ public class WishlistService {
         return wishlists.stream()
                 .map(wishlist -> {
                     PopupStore popupStore = wishlist.getPopupStore();
-                    boolean isInTogoList = isPopupStoreInUsersTogoList(user,popupStore);
+                    //todo 수정
+                    //boolean isInTogoList = isPopupStoreInUsersTogoList(user,popupStore);
+                    boolean isInTogoList = false;
                     WishTogoDTO wishTogoDTO = new WishTogoDTO();
                     wishTogoDTO.setInTogo(isInTogoList);
                     wishTogoDTO.setPopupStore(popupStore);
@@ -98,10 +100,10 @@ public class WishlistService {
         return !wishlistPopupStores.isEmpty();
     }
 
-    private boolean isPopupStoreInUsersTogoList(UserEntity userEntity, PopupStore popupStore) {
-        List<TogoList> togoListPopupStores = togoListRepository.findByUserEntityAndPopupStore(userEntity, popupStore);
-        return !togoListPopupStores.isEmpty();
-    }
+//    private boolean isPopupStoreInUsersTogoList(UserEntity userEntity, PopupStore popupStore) {
+//        List<TogoList> togoListPopupStores = togoListRepository.findByUserEntityAndPopupStore(userEntity, popupStore);
+//        return !togoListPopupStores.isEmpty();
+//    }
 
     public void delete(UserEntity userEntity, PopupStore popupStore){
 
