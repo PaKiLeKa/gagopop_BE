@@ -248,7 +248,7 @@ public class TogoListController {
 
 
     //투고 삭제
-    @GetMapping("/togo/delete")
+    @PostMapping("/togo/delete")
     public ResponseEntity<String> deleteToGoList(HttpServletRequest request,
                                                    @RequestParam("id") Long togoId) {
         Optional<UserEntity> optionalUser = userService.findUser( request );
@@ -269,7 +269,7 @@ public class TogoListController {
         return ResponseEntity.ok("Delete Togo list successfully");
     }
 
-    @GetMapping("/togo/delete-test")
+    @PostMapping("/togo/delete-test")
     public ResponseEntity<String> deleteToGoListTest(HttpServletRequest request,
                                                  @RequestParam("id") Long togoId) {
         UserEntity testUser=userRepository.getById( testUserID );
