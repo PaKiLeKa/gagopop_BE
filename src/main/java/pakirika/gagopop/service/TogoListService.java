@@ -3,15 +3,13 @@ package pakirika.gagopop.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pakirika.gagopop.dto.TogoListDTO;
 import pakirika.gagopop.entity.*;
 import pakirika.gagopop.repository.PopupStoreRepository;
 import pakirika.gagopop.repository.TogoListRepository;
-import pakirika.gagopop.repository.WishlistRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,27 +76,6 @@ public class TogoListService {
     }
 
 
-//    @Transactional
-//    public TogoList addPopupStoreToTogoList(Long togoListId, Long popupStoreId) {
-//        Optional<TogoList> togoListOptional = togoListRepository.findById(togoListId);
-//        Optional<PopupStore> popupStoreOptional = popupStoreRepository.findById(popupStoreId);
-//
-//        if (togoListOptional.isPresent() && popupStoreOptional.isPresent()) {
-//            TogoList togoList = togoListOptional.get();
-//            PopupStore popupStore = popupStoreOptional.get();
-//
-//            if (togoList.addPopupStore(popupStore)) {
-//                return togoListRepository.save(togoList);
-//            } else {
-//                throw new IllegalStateException("Cannot add more than 5 popup stores to a togo list");
-//            }
-//        } else {
-//            throw new IllegalStateException("TogoList or PopupStore not found");
-//        }
-//    }
-
-
-
 
     public List<TogoList> getAllTogoLists(UserEntity userEntity){
         List<TogoList> togoLists = togoListRepository.findByUserEntity( userEntity );
@@ -136,4 +113,13 @@ public class TogoListService {
         return false;
     }
 
+    public TogoListDTO toDto(TogoList togoList) {
+        Set<Long> popupStoreIds = togoList.getPopupStores()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(PopupStore::getId)
+                .collect(Collectors.toSet());
+
+        return new TogoListDTO(togoList, popupStoreIds);
+    }
 }

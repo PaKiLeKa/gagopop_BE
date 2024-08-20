@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pakirika.gagopop.dto.TogoListDTO;
 import pakirika.gagopop.entity.PopupStore;
 import pakirika.gagopop.entity.TogoList;
 import pakirika.gagopop.entity.UserEntity;
@@ -19,6 +20,7 @@ import pakirika.gagopop.service.TogoListService;
 import pakirika.gagopop.service.UserService;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -98,18 +100,38 @@ public class TogoListController {
             return ResponseEntity.status( HttpStatus.UNAUTHORIZED ).body( "Unauthorized" );
         }
 
-        List<TogoList> optionalTogoList=togoListService.getAllTogoLists( optionalUser.get() );
+        List<TogoList> togoLists = togoListService.getAllTogoLists(optionalUser.get());
 
-        return ResponseEntity.ok(optionalTogoList.stream().toList());
+        if (togoLists == null || togoLists.isEmpty()) {
+            // TogoList가 null이거나 비어 있는 경우
+            return ResponseEntity.ok("No Togo Lists found for this user."); // 빈 리스트 메시지 반환
+        }
+
+        List<TogoListDTO> dtoList = togoLists.stream()
+                .map(togoListService::toDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtoList);
+
+
     }
 
     @GetMapping("/togo/all-test")
     public ResponseEntity showTogoListAllTest(HttpServletRequest request){
         UserEntity testUser=userRepository.getById( testUserID );
 
-        List<TogoList> optionalTogoList=togoListService.getAllTogoLists( testUser);
+        List<TogoList> togoLists = togoListService.getAllTogoLists(testUser);
 
-        return ResponseEntity.ok(optionalTogoList.stream().toList());
+        if (togoLists == null || togoLists.isEmpty()) {
+            // TogoList가 null이거나 비어 있는 경우
+            return ResponseEntity.ok("No Togo Lists found for this user."); // 빈 리스트 메시지 반환
+        }
+
+        List<TogoListDTO> dtoList = togoLists.stream()
+                .map(togoListService::toDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtoList);
     }
 
 
